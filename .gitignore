@@ -76,11 +76,8 @@ target/
 .ipynb_checkpoints/
 
 # exclude data from source control by default
-<<<<<<< HEAD
 
-=======
 
->>>>>>> e096986 (Reinitialize all files)
 
 # Mac OS-specific storage files
 .DS_Store
@@ -91,10 +88,9 @@ target/
 
 # Mypy cache
 .mypy_cache/
-<<<<<<< HEAD
-=======
+
 
 *.csv
 *.xlsx
 !*.dvc
->>>>>>> e096986 (Reinitialize all files)
+
