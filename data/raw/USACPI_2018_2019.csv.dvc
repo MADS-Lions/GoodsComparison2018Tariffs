@@ -1,0 +1,5 @@
+outs:
+- md5: 7b6b2a77c04e83f38768086a60229b23
+  size: 408045
+  hash: md5
+  path: USACPI_2018_2019.csv
