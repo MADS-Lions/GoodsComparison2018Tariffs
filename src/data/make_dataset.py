@@ -34,6 +34,7 @@ def manipulate_data(data, which_data_file):
         Canadian_CPI_dataset = Canadian_CPI_dataset[['Products and product groups', 'REF_DATE', 'VALUE']]
         Canadian_CPI_dataset = Canadian_CPI_dataset.groupby(['Products and product groups', 'REF_DATE']).mean()    
         Canadian_CPI_dataset.reset_index(inplace=True)
+        Canadian_CPI_dataset['REF_DATE'] = Canadian_CPI_dataset['REF_DATE'].apply(lambda x: pd.to_datetime(x))
         return Canadian_CPI_dataset
     else:
         USA_CPI_dataset = data.copy()
@@ -65,18 +66,19 @@ def check_for_na(data, column_name):
         return False
     
 def check_data_type(data, column_name):
-    return column_name + "data type is: " + str(data[column_name].dtype)
+    return column_name + " data type is: " + str(data[column_name].dtype)
     
 def test_unit_dtype(data, column_name, dtype): 
     return data[column_name].dtype == dtype
 
-def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt):
+def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt=="less_than"):
     if gt_lt == "less_than":
-        return data[data[column_name] < value]
+        return all(data[column_name] < value)
     else:
-        return data[data[column_name] > value]
+        return all(data[column_name] > value)
     
-
+def test_unit_between(data, column_name, value1, value2):
+    return all((data[column_name] > value1) & (data[column_name] < value2))
 
 def save_data(data, output_filepath):
     data.to_csv(output_filepath, index=False)
