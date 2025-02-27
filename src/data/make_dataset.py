@@ -22,14 +22,16 @@ def main(input_filepath, output_filepath):
     save_data(Canadian_CPI_dataset, "../../data/processed/Canadian_CPI_Processed.csv")
     save_data(USA_CPI_dataset, "../../data/processed/USA_CPI_Processed.csv")
     logger.info('Data processing completed successfully')
+
 def load_data(input_filepath):
     """Load data from input_filepath"""
     data = pd.read_csv(input_filepath)
     return data
 
 def manipulate_data(data, which_data_file):
-    if which_data_file == "Canadian":
+    if which_data_file == "Canada":
         Canadian_CPI_dataset = data.copy()
+        Canadian_CPI_dataset = Canadian_CPI_dataset[['Products and product groups', 'REF_DATE', 'VALUE']]
         Canadian_CPI_dataset = Canadian_CPI_dataset.groupby(['Products and product groups', 'REF_DATE']).mean()    
         Canadian_CPI_dataset.reset_index(inplace=True)
         return Canadian_CPI_dataset
@@ -38,7 +40,42 @@ def manipulate_data(data, which_data_file):
         USA_CPI_dataset = USA_CPI_dataset[USA_CPI_dataset['DATA TYPE'] == 'SEASONALLY ADJUSTED INDEX']
         USA_CPI_dataset.drop(columns = ['ITEM', 'series id', 'DATA TYPE'], inplace=True)
         USA_CPI_dataset = USA_CPI_dataset.groupby(['TITLE', 'YEAR']).mean()
-        return USA_CPI_dataset
+        USA_CPI_dataset_T = USA_CPI_dataset.T
+        df_USA_Single_Columns_for_2018_2019 = pd.DataFrame()
+        for col in USA_CPI_dataset_T.columns:
+            col_name = col[0]
+            year = col[1]
+            if year == 2018:
+                to_make_single_column = USA_CPI_dataset_T[col].tolist()
+                new_index = [str(ind) + '_2018' for ind in USA_CPI_dataset_T.index]
+                dataframe_to_add = pd.DataFrame(to_make_single_column, columns = [col_name], index = new_index)
+            else:
+                add_column = USA_CPI_dataset_T[col].tolist()
+                new_index = [str(ind) + '_2019' for ind in USA_CPI_dataset_T.index]
+                second_dataframe_to_add = pd.DataFrame(add_column, columns = [col_name], index = new_index)
+                column_to_add = pd.concat([dataframe_to_add, second_dataframe_to_add], axis=0)
+                df_USA_Single_Columns_for_2018_2019 = pd.concat([df_USA_Single_Columns_for_2018_2019, column_to_add], axis=1)
+
+        return df_USA_Single_Columns_for_2018_2019
+
+def check_for_na(data, column_name):
+    if data[column_name].isnull().values.any():
+        return True
+    else:
+        return False
+    
+def check_data_type(data, column_name):
+    return column_name + "data type is: " + str(data[column_name].dtype)
+    
+def test_unit_dtype(data, column_name, dtype): 
+    return data[column_name].dtype == dtype
+
+def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt):
+    if gt_lt == "less_than":
+        return data[data[column_name] < value]
+    else:
+        return data[data[column_name] > value]
+    
 
 
 def save_data(data, output_filepath):
