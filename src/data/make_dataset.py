@@ -56,7 +56,16 @@ def manipulate_data(data, which_data_file):
                 second_dataframe_to_add = pd.DataFrame(add_column, columns = [col_name], index = new_index)
                 column_to_add = pd.concat([dataframe_to_add, second_dataframe_to_add], axis=0)
                 df_USA_Single_Columns_for_2018_2019 = pd.concat([df_USA_Single_Columns_for_2018_2019, column_to_add], axis=1)
+        df_USA_Single_Columns_for_2018_2019.reset_index(inplace=True)
+        df_USA_Single_Columns_for_2018_2019.rename(columns = {'index': 'Date'}, inplace=True)
 
+        df_USA_Single_Columns_for_2018_2019['Month'] = df_USA_Single_Columns_for_2018_2019['Date'].str.split('_').str[0]
+
+        df_USA_Single_Columns_for_2018_2019['Year'] = df_USA_Single_Columns_for_2018_2019['Date'].str.split('_').str[1]
+        df_USA_Single_Columns_for_2018_2019['REF_DATE'] = df_USA_Single_Columns_for_2018_2019['Month'] + '-' + df_USA_Single_Columns_for_2018_2019['Year']
+        df_USA_Single_Columns_for_2018_2019.drop(columns = ['Date', 'Month', 'Year'], inplace=True)
+        df_USA_Single_Columns_for_2018_2019['REF_DATE'] = pd.to_datetime(df_USA_Single_Columns_for_2018_2019['REF_DATE'])
+        df_USA_Single_Columns_for_2018_2019.set_index('REF_DATE', inplace=True)
         return df_USA_Single_Columns_for_2018_2019
 
 def check_for_na(data, column_name):
@@ -71,11 +80,11 @@ def check_data_type(data, column_name):
 def test_unit_dtype(data, column_name, dtype): 
     return data[column_name].dtype == dtype
 
-def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt=="less_than"):
+def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt):
     if gt_lt == "less_than":
-        return all(data[column_name] < value)
+        return any(data[column_name] < value)
     else:
-        return all(data[column_name] > value)
+        return any(data[column_name] > value)
     
 def test_unit_between(data, column_name, value1, value2):
     return all((data[column_name] > value1) & (data[column_name] < value2))
