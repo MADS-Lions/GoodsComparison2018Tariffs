@@ -1,4 +1,4 @@
 [core]
-    remote = localremote
-['remote "localremote"']
+    remote = myremote
+['remote "myremote"']
     url = ../data/raw
