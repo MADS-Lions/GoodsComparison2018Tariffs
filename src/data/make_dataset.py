@@ -36,6 +36,9 @@ def manipulate_data(data, which_data_file):
         Canadian_CPI_dataset = data.copy()
         Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
         Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['REF_DATE']>='2017-01-01')&(Canadian_CPI_dataset['REF_DATE']<='2019-12-31')]
+        print('UOM has two unique values in the dataset: ', Canadian_CPI_dataset['UOM'].unique())
+        Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='2002=100')]
+        print('UOM now only has 2002 value: ', Canadian_CPI_dataset['UOM'].unique())
         Canadian_CPI_dataset = Canadian_CPI_dataset[['Products and product groups', 'REF_DATE', 'VALUE']]
         Canadian_CPI_dataset = Canadian_CPI_dataset.groupby(['Products and product groups', 'REF_DATE']).mean()    
         Canadian_CPI_dataset.reset_index(inplace=True)
