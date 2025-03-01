@@ -23,50 +23,63 @@ def main(input_filepath, output_filepath):
     save_data(USA_CPI_dataset, "../../data/processed/USA_CPI_Processed.csv")
     logger.info('Data processing completed successfully')
 
-def load_data(input_filepath):
+def load_data(input_filepath, which_data_file):
     """Load data from input_filepath"""
-    data = pd.read_csv(input_filepath)
+    if which_data_file == '.csv':
+        data = pd.read_csv(input_filepath)
+    else:
+        data = pd.read_excel(input_filepath)
     return data
 
 def manipulate_data(data, which_data_file):
     if which_data_file == "Canada":
         Canadian_CPI_dataset = data.copy()
+        Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
+        Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['REF_DATE']>='2017-01-01')&(Canadian_CPI_dataset['REF_DATE']<='2019-12-31')]
         Canadian_CPI_dataset = Canadian_CPI_dataset[['Products and product groups', 'REF_DATE', 'VALUE']]
         Canadian_CPI_dataset = Canadian_CPI_dataset.groupby(['Products and product groups', 'REF_DATE']).mean()    
         Canadian_CPI_dataset.reset_index(inplace=True)
-        Canadian_CPI_dataset['REF_DATE'] = Canadian_CPI_dataset['REF_DATE'].apply(lambda x: pd.to_datetime(x))
+        Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
         return Canadian_CPI_dataset
     else:
         USA_CPI_dataset = data.copy()
-        USA_CPI_dataset = USA_CPI_dataset[USA_CPI_dataset['DATA TYPE'] == 'SEASONALLY ADJUSTED INDEX']
-        USA_CPI_dataset.drop(columns = ['ITEM', 'series id', 'DATA TYPE'], inplace=True)
+        USA_CPI_dataset = USA_CPI_dataset[USA_CPI_dataset['DATA_TYPE'] == 'SEASONALLY ADJUSTED INDEX']
+        USA_CPI_dataset = USA_CPI_dataset[(USA_CPI_dataset['YEAR']>=2017)&(USA_CPI_dataset['YEAR']<=2019)]
+        USA_CPI_dataset.drop(columns = ['ITEM', 'seriesid', 'DATA_TYPE'], inplace=True)
         USA_CPI_dataset = USA_CPI_dataset.groupby(['TITLE', 'YEAR']).mean()
         USA_CPI_dataset_T = USA_CPI_dataset.T
-        df_USA_Single_Columns_for_2018_2019 = pd.DataFrame()
+        df_USA_Single_Columns_for_2017_2018_2019 = pd.DataFrame()
+        
         for col in USA_CPI_dataset_T.columns:
+            
             col_name = col[0]
             year = col[1]
-            if year == 2018:
-                to_make_single_column = USA_CPI_dataset_T[col].tolist()
+            if year == 2017:
+                add_column_2017 = USA_CPI_dataset_T[col].tolist()
+                new_index = [str(ind) + '_2017' for ind in USA_CPI_dataset_T.index]
+                dataframe_2017 = pd.DataFrame(add_column_2017, columns = [col_name], index = new_index)
+            elif year == 2018:
+                add_column_2018 = USA_CPI_dataset_T[col].tolist()
                 new_index = [str(ind) + '_2018' for ind in USA_CPI_dataset_T.index]
-                dataframe_to_add = pd.DataFrame(to_make_single_column, columns = [col_name], index = new_index)
-            else:
-                add_column = USA_CPI_dataset_T[col].tolist()
+                dataframe_2018 = pd.DataFrame(add_column_2018, columns = [col_name], index = new_index)
+                
+            elif year == 2019:
+                add_column_2019 = USA_CPI_dataset_T[col].tolist()
                 new_index = [str(ind) + '_2019' for ind in USA_CPI_dataset_T.index]
-                second_dataframe_to_add = pd.DataFrame(add_column, columns = [col_name], index = new_index)
-                column_to_add = pd.concat([dataframe_to_add, second_dataframe_to_add], axis=0)
-                df_USA_Single_Columns_for_2018_2019 = pd.concat([df_USA_Single_Columns_for_2018_2019, column_to_add], axis=1)
-        df_USA_Single_Columns_for_2018_2019.reset_index(inplace=True)
-        df_USA_Single_Columns_for_2018_2019.rename(columns = {'index': 'Date'}, inplace=True)
+                dataframe_2019 = pd.DataFrame(add_column_2019, columns = [col_name], index = new_index)
+                column_to_add = pd.concat([dataframe_2017, dataframe_2018, dataframe_2019], axis=0)
+                df_USA_Single_Columns_for_2017_2018_2019 = pd.concat([df_USA_Single_Columns_for_2017_2018_2019, column_to_add], axis=1)
+        df_USA_Single_Columns_for_2017_2018_2019.reset_index(inplace=True)
+        df_USA_Single_Columns_for_2017_2018_2019.rename(columns = {'index': 'Date'}, inplace=True)
 
-        df_USA_Single_Columns_for_2018_2019['Month'] = df_USA_Single_Columns_for_2018_2019['Date'].str.split('_').str[0]
+        df_USA_Single_Columns_for_2017_2018_2019['Month'] = df_USA_Single_Columns_for_2017_2018_2019['Date'].str.split('_').str[0]
 
-        df_USA_Single_Columns_for_2018_2019['Year'] = df_USA_Single_Columns_for_2018_2019['Date'].str.split('_').str[1]
-        df_USA_Single_Columns_for_2018_2019['REF_DATE'] = df_USA_Single_Columns_for_2018_2019['Month'] + '-' + df_USA_Single_Columns_for_2018_2019['Year']
-        df_USA_Single_Columns_for_2018_2019.drop(columns = ['Date', 'Month', 'Year'], inplace=True)
-        df_USA_Single_Columns_for_2018_2019['REF_DATE'] = pd.to_datetime(df_USA_Single_Columns_for_2018_2019['REF_DATE'])
-        df_USA_Single_Columns_for_2018_2019.set_index('REF_DATE', inplace=True)
-        return df_USA_Single_Columns_for_2018_2019
+        df_USA_Single_Columns_for_2017_2018_2019['Year'] = df_USA_Single_Columns_for_2017_2018_2019['Date'].str.split('_').str[1]
+        df_USA_Single_Columns_for_2017_2018_2019['REF_DATE'] = df_USA_Single_Columns_for_2017_2018_2019['Month'] + '-' + df_USA_Single_Columns_for_2017_2018_2019['Year']
+        df_USA_Single_Columns_for_2017_2018_2019.drop(columns = ['Date', 'Month', 'Year'], inplace=True)
+        df_USA_Single_Columns_for_2017_2018_2019['REF_DATE'] = pd.to_datetime(df_USA_Single_Columns_for_2017_2018_2019['REF_DATE'])
+        df_USA_Single_Columns_for_2017_2018_2019.set_index('REF_DATE', inplace=True)
+        return df_USA_Single_Columns_for_2017_2018_2019
 
 def check_for_na(data, column_name):
     if data[column_name].isnull().values.any():
