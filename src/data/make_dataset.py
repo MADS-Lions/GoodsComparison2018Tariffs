@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-import click
+"""This script loads the raw data, manipulates it, and saves the processed data. This script also contains functions to check for missing values, data types, and unit tests for the data.
+"""
+#import relevant libraries
+import click # type: ignore
 import logging
 from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
-import pandas as pd
+from dotenv import find_dotenv, load_dotenv # type: ignore
+import pandas as pd # type: ignore
 
 
 @click.command()
@@ -12,6 +15,9 @@ import pandas as pd
 def main(input_filepath, output_filepath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
+        Args:
+            input_filepath::str: The path to the raw data file.
+            output_filepath::str: The path to the processed data file.
     """
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
@@ -24,7 +30,13 @@ def main(input_filepath, output_filepath):
     logger.info('Data processing completed successfully')
 
 def load_data(input_filepath, which_data_file):
-    """Load data from input_filepath"""
+    """Load data from input_filepath and return a pandas dataframe.
+    Args:
+        input_filepath::str: The path to the raw data file.
+        which_data_file::str: The type of data file to load.
+    Returns:
+        data::pandas_df: The loaded data.
+    """
     if which_data_file == '.csv':
         data = pd.read_csv(input_filepath)
     else:
@@ -32,6 +44,13 @@ def load_data(input_filepath, which_data_file):
     return data
 
 def manipulate_data(data, which_data_file):
+    """Load data and manipulate to return a pandas dataframe ready for visualization and analysis.
+    Args:
+        data::pandas_df: The loaded data.
+        which_data_file::str: The data file to load (Canada or US).
+        Returns:
+        data::pandas_df: The manipulated and formatted data.
+    """
     if which_data_file == "Canada":
         Canadian_CPI_dataset = data.copy()
         Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
@@ -85,27 +104,74 @@ def manipulate_data(data, which_data_file):
         return df_USA_Single_Columns_for_2017_2018_2019
 
 def check_for_na(data, column_name):
+    """Check if there are any missing values in the column_name of the data.
+    Args:
+        data::pandas_df: The data to check for missing values.
+        column_name::str: The column to check for missing values.
+    Returns:
+        bool: True if there are missing values, False otherwise.
+    """
     if data[column_name].isnull().values.any():
         return True
     else:
         return False
     
 def check_data_type(data, column_name):
+    """Check the data type of the column_name in the data.
+    Args:
+        data::pandas_df: The data to check for missing values.
+        column_name::str: The column to check for missing values.
+    Returns:
+        str: The data type of the column_name in the data.
+    """
     return column_name + " data type is: " + str(data[column_name].dtype)
     
-def test_unit_dtype(data, column_name, dtype): 
+def test_unit_dtype(data, column_name, dtype):
+    """Check if the data type of the column_name in the data is equal to dtype.
+    Args:
+        data::pandas_df: The data to check for missing values.
+        column_name::str: The column to check for missing values.
+        dtype::str: The data type to check for.
+    Returns:
+        bool: True if the data type of the column_name in the data is equal to dtype, False otherwise.
+    """ 
     return data[column_name].dtype == dtype
 
 def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt):
+    """Check if the column_name in the data is less than or greater than value.
+    Args:
+        data::pandas_df: The data to check for missing values.
+        column_name::str: The column to check for missing values.
+        value::int: The value to check for.
+        gt_lt::str: The condition to check for.
+    Returns:
+        bool: True if any of the column_name in the data is less than or greater than value, False otherwise.
+    """
     if gt_lt == "less_than":
         return any(data[column_name] < value)
     else:
         return any(data[column_name] > value)
     
 def test_unit_between(data, column_name, value1, value2):
+    """Unit test to check if the column_name in the data is between value1 and value2.
+    Args:
+        data::pandas_df: The data to check for missing values.
+        column_name::str: The column to check for missing values.
+        value1::int: The first value to check for.
+        value2::int: The second value to check for.
+    Returns:
+        bool: True if all of the column_name in the data is between value1 and value2, False otherwise.
+    """
     return all((data[column_name] > value1) & (data[column_name] < value2))
 
 def save_data(data, output_filepath):
+    """Save the data to the output_filepath.
+    Args:
+        data::pandas_df: The data to save.
+        output_filepath::str: The path to save the data.
+    Returns:
+        None
+    """
     data.to_csv(output_filepath, index=False)
     return None
 
