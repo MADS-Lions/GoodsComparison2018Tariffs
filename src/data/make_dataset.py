@@ -100,7 +100,7 @@ def manipulate_data(data, which_data_file):
         df_USA_Single_Columns_for_2017_2018_2019['REF_DATE'] = df_USA_Single_Columns_for_2017_2018_2019['Month'] + '-' + df_USA_Single_Columns_for_2017_2018_2019['Year']
         df_USA_Single_Columns_for_2017_2018_2019.drop(columns = ['Date', 'Month', 'Year'], inplace=True)
         df_USA_Single_Columns_for_2017_2018_2019['REF_DATE'] = pd.to_datetime(df_USA_Single_Columns_for_2017_2018_2019['REF_DATE'])
-        df_USA_Single_Columns_for_2017_2018_2019.set_index('REF_DATE', inplace=True)
+        
         return df_USA_Single_Columns_for_2017_2018_2019
 
 def check_for_na(data, column_name):
