@@ -52,17 +52,38 @@ def manipulate_data(data, which_data_file):
         data::pandas_df: The manipulated and formatted data.
     """
     if which_data_file == "Canada":
-        Canadian_CPI_dataset = data.copy()
-        Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
-        Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['REF_DATE']>='2017-01-01')&(Canadian_CPI_dataset['REF_DATE']<='2020-02-01')]
-        print('UOM has two unique values in the dataset: ', Canadian_CPI_dataset['UOM'].unique())
-        Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='2002=100')]
-        print('UOM now only has 2002 value: ', Canadian_CPI_dataset['UOM'].unique())
-        Canadian_CPI_dataset = Canadian_CPI_dataset[['Products and product groups', 'REF_DATE', 'VALUE']]
-        Canadian_CPI_dataset = Canadian_CPI_dataset.groupby(['Products and product groups', 'REF_DATE']).mean()    
-        Canadian_CPI_dataset.reset_index(inplace=True)
-        Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
-        return Canadian_CPI_dataset
+        if 'Products and product groups' in data.columns:
+            
+            Canadian_CPI_dataset = data.copy()
+            Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
+            Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['REF_DATE']>='2017-01-01')&(Canadian_CPI_dataset['REF_DATE']<='2020-02-01')]
+            print('UOM has two unique values in the dataset: ', Canadian_CPI_dataset['UOM'].unique())
+            Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='2002=100')]
+            print('UOM now only has 2002 value: ', Canadian_CPI_dataset['UOM'].unique())
+            Canadian_CPI_dataset = Canadian_CPI_dataset[['Products and product groups', 'REF_DATE', 'VALUE']]
+            Canadian_CPI_dataset = Canadian_CPI_dataset.groupby(['Products and product groups', 'REF_DATE']).mean()    
+            Canadian_CPI_dataset.reset_index(inplace=True)
+            Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
+            return Canadian_CPI_dataset
+        else: 
+            Canadian_CPI_dataset = data.copy()
+            Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
+            Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['REF_DATE']>='2017-01-01')&(Canadian_CPI_dataset['REF_DATE']<='2020-02-01')]
+            print('UOM has two unique values in the dataset: ', Canadian_CPI_dataset['UOM'].unique())
+            Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='Dollars')&(Canadian_CPI_dataset['Seasonal adjustment']=='Seasonally adjusted')]
+            print('UOM now only has 2002 value: ', Canadian_CPI_dataset['UOM'].unique())
+            Canadian_CPI_dataset = Canadian_CPI_dataset[[
+                'Principal statistics',
+                'North American Industry Classification System (NAICS)',
+                'REF_DATE',
+                'VALUE'
+            ]]
+            Canadian_CPI_dataset['North American Industry Classification System (NAICS)'] = (
+                Canadian_CPI_dataset['North American Industry Classification System (NAICS)'].str.replace(r'[\s*]\[[\d*]\]', '', regex=True)
+            )
+
+            
+            return Canadian_CPI_dataset
     else:
         USA_CPI_dataset = data.copy()
         USA_CPI_dataset = USA_CPI_dataset[USA_CPI_dataset['DATA_TYPE'] == 'SEASONALLY ADJUSTED INDEX']
@@ -178,6 +199,16 @@ def save_data(data, output_filepath):
     data.to_csv(output_filepath, index=False)
     return None
 
+def look_at_missing_values(data, feature):
+    """Look at missing values in the data.
+    Args:
+        data::pandas_df: The data to look at missing values.
+    Returns:
+        None
+    """
+    missing_data = data[data[feature].isnull()]
+    print('Missing data: ', missing_data)
+    return None
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
