@@ -29,7 +29,7 @@ def main(input_filepath, output_filepath):
     save_data(USA_CPI_dataset, "../../data/processed/USA_CPI_Processed.csv")
     logger.info('Data processing completed successfully')
 
-def load_data(input_filepath, which_data_file):
+def load_data(input_filepath, which_data_file, header = 0):
     """Load data from input_filepath and return a pandas dataframe.
     Args:
         input_filepath::str: The path to the raw data file.
@@ -38,9 +38,9 @@ def load_data(input_filepath, which_data_file):
         data::pandas_df: The loaded data.
     """
     if which_data_file == '.csv':
-        data = pd.read_csv(input_filepath)
+        data = pd.read_csv(input_filepath, header = header)
     else:
-        data = pd.read_excel(input_filepath)
+        data = pd.read_excel(input_filepath, header = header)
     return data
 
 def manipulate_data(data, which_data_file):
@@ -70,14 +70,25 @@ def manipulate_data(data, which_data_file):
             Canadian_CPI_dataset['REF_DATE'] = pd.to_datetime(Canadian_CPI_dataset['REF_DATE'])
             Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['REF_DATE']>='2017-01-01')&(Canadian_CPI_dataset['REF_DATE']<='2020-02-01')]
             print('UOM has two unique values in the dataset: ', Canadian_CPI_dataset['UOM'].unique())
-            Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='Dollars')&(Canadian_CPI_dataset['Seasonal adjustment']=='Seasonally adjusted')]
+            try:
+                Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='Dollars')&(Canadian_CPI_dataset['Seasonal adjustment']=='Seasonally adjusted')]
+            except:
+                Canadian_CPI_dataset = Canadian_CPI_dataset[(Canadian_CPI_dataset['UOM']=='Dollars')&(Canadian_CPI_dataset['Adjustments']=='Seasonally adjusted')]
             print('UOM now only has 2002 value: ', Canadian_CPI_dataset['UOM'].unique())
-            Canadian_CPI_dataset = Canadian_CPI_dataset[[
-                'Principal statistics',
-                'North American Industry Classification System (NAICS)',
-                'REF_DATE',
-                'VALUE'
-            ]]
+            try: 
+                Canadian_CPI_dataset = Canadian_CPI_dataset[[
+                    'Principal statistics',
+                    'North American Industry Classification System (NAICS)',
+                    'REF_DATE',
+                    'VALUE'
+                ]]
+            except:
+                Canadian_CPI_dataset = Canadian_CPI_dataset[[
+                    'Sales',
+                    'North American Industry Classification System (NAICS)',
+                    'REF_DATE',
+                    'VALUE'
+                ]]
             Canadian_CPI_dataset['North American Industry Classification System (NAICS)'] = (
                 Canadian_CPI_dataset['North American Industry Classification System (NAICS)'].str.replace(r'[\s*]\[[\d*]\]', '', regex=True)
             )
