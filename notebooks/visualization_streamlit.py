@@ -12,7 +12,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose, MSTL
 import streamlit as st
 
  # Enable Streamlit compatibility in Jupyter
-
+st.set_page_config(layout="wide")
 
 def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = None, color = None, x_label = 'Date', y_label = '', title = '', lines_to_plot = []):
     print("Product: ", category)
@@ -49,13 +49,57 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
             color=color
         )
 
+    y_values = [
+        df_in_question.loc[df['REF_DATE'] == '2017-08-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2017-10-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2018-02-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2018-04-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2018-07-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2018-11-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2019-05-01', "VALUE"].iloc[0],
+        df_in_question.loc[df['REF_DATE'] == '2019-09-01', "VALUE"].iloc[0]
+    ]
+    y_values_2 = [
+        df_in_question.loc[df['REF_DATE'] == '2017-08-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2017-10-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2018-02-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2018-04-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2018-07-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2018-11-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2019-05-01', "VALUE"].iloc[0]-0.08,
+        df_in_question.loc[df['REF_DATE'] == '2019-09-01', "VALUE"].iloc[0]-0.08
+
+        
+    ]
+    
+    df_text_arrow_df = pd.DataFrame({
+        'x': ['2017-08-01', '2017-10-01', '2018-02-01', '2018-04-01', '2018-07-01', '2018-11-01', '2019-05-01', '2019-09-01'],
+        'y': y_values,
+        'y2': y_values_2,
+        'text': ['Start of talks about intellectual property and end of trade talks with China', 'Results of Intellectual Inquiry', 'Tariffs on China by America', 'Tariffs on imported Canadian goods by America', 'China/Canada Tariffs on imported American goods', 'China has some tariff hikes', 'End of Canada/US Tariffs', 'Chinese exemptions for American products']
+    })
+    text_annotation = alt.Chart(df_text_arrow_df).mark_text(
+        align='left',
+        baseline='middle',
+        dx=7
+    ).encode(
+        x='x',
+        y='y',
+        text='text'
+    )
+    arrow_annotation = alt.Chart(df_text_arrow_df).mark_text().encode(
+        x='x',
+        y='y2',
+        text = alt.value('\u2191')
+    )
     
     if len(lines_to_plot) == 0:
         chart_final = chart
     else:
         all_lines.extend([chart])
         chart_final = alt.layer(*all_lines)
-    return chart_final
+    
+    return chart_final + text_annotation + arrow_annotation
 
 def plot_supply_and_demand_canada(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month'):
     sales_df = sales_df[(sales_df['GoodType'] == product) & ((sales_df['PrincipleStats'] == principlestats_cat) | (sales_df['PrincipleStats'] == principlestats_cat2))].copy()
@@ -73,7 +117,7 @@ def plot_supply_and_demand_canada(sales_df, product, date1 = '2018-05-01', date2
     sales_df = sales_df[(sales_df['REF_DATE']>=date1) & (sales_df['REF_DATE']<=date2)]
     
     chart1 = alt.Chart(sales_df).mark_point().encode(
-    x='REF_DATE',
+    x=alt.X('REF_DATE', title='Date'),
     y='VALUE',
     color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
     )
@@ -202,8 +246,8 @@ def plot_individual_product(df, category, date1, date2):
     return chart
 chart = plot_structure(American_df, selected_option, str(start_date), str(end_date), x_label='Date', y_label="CPI Index for Inflation")
 chart2 = plot_structure(Canadian_df, selected_option, str(start_date), str(end_date), x_label='Date', y_label="CPI Index for Inflation")
-chart = chart.configure_axis(grid=False)
-chart2 = chart2.configure_axis(grid=False)
+chart = chart.configure_axis(grid=False).properties(width=4500, height = 650).interactive()
+chart2 = chart2.configure_axis(grid=False).properties(width=4500, height = 650).interactive()
 st.write("American Inflation for ", selected_option)
 st.altair_chart(chart)
 st.write("Canadian Inflation for ", selected_option)
@@ -213,12 +257,12 @@ st.write("All American products for category ", selected_option)
 chart3 = plot_individual_product(American_df_2, selected_option, str(start_date), str(end_date))
 chart4 = plot_individual_product(Canadian_df_2, selected_option, str(start_date), str(end_date))
 
-chart3 = chart3.configure_axis(grid=False)
-chart4 = chart4.configure_axis(grid=False)
-st.altair_chart(chart3)
+chart3 = chart3.configure_axis(grid=False).properties(width=4500, height=650)
+chart4 = chart4.configure_axis(grid=False).properties(width=4500, height=650)
+st.altair_chart(chart3, use_container_width=True)
 st.write("All Canadian products for category ", selected_option)
 
-st.altair_chart(chart4)
+st.altair_chart(chart4, use_container_width=True)
 for option, option2, option3 in zip(options, options2, options3):
     if selected_option == option:
         selected_option2 = option2
@@ -230,8 +274,10 @@ else:
     chart5 = plot_supply_and_demand_canada(American_supply_demand, selected_option3, str(start_date), str(end_date), principlestats_cat='Finished Goods Inventories Percent Change Monthly', principlestats_cat2='Value of Shipments Percent Change Monthly')
 chart6 = plot_supply_and_demand_canada(Canadian_supply_demand, selected_option2, str(start_date), str(end_date))
 
-
+chart5 = chart5.configure_axis(grid=False).properties(width=4500, height=650).interactive()
+chart6 = chart6.configure_axis(grid=False).properties(width=4500, height=650).interactive()
 st.write("Supply and Demand for ", selected_option3, " in the USA")
-st.altair_chart(chart5)
+st.altair_chart(chart5, use_container_width=True)
 st.write("Supply and Demand for ", selected_option2, " in Canada")
-st.altair_chart(chart6)
+st.altair_chart(chart6, use_container_width=True)
+
