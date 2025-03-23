@@ -16,21 +16,21 @@ import streamlit as st
 st.set_page_config(layout="wide")
 
 def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = None, color = None, x_label = 'Date', y_label = '', title = '', lines_to_plot = []):
-    """plot structure of data for line plot for each category of vehicle, groceries, energy, and clothing and footwear
-    Arguments:
-    Accepts df: DataFrame which is the data to be plotted
-    Accepts category: str which is the category to be plotted
-    Accepts date1: str which is the start date for the plot
-    Accepts date2: str which is the end date for the plot
-    Accepts feature: str which is the feature to be plotted
-    Accepts goodtype: str which is the goodtype to be plotted
-    Accepts color: str which is the color of the plot
-    Accepts x_label: str which is the x-axis label
-    Accepts y_label: str which is the y-axis label
-    Accepts title: str which is the title of the plot
-    Accepts lines_to_plot: list which is the list of lines to plot on the graph
+    """Plot structure of data for line plot for each category of vehicle, groceries, energy, and clothing and footwear
+    Accepts Arguments:
+     param::str::df: DataFrame which is the data to be plotted
+     param::str::category: str which is the category to be plotted
+     param::str::date1: str which is the start date for the plot
+     param::str::date2: str which is the end date for the plot
+     param::str::feature: str which is the feature to be plotted
+     param::str::goodtype: str which is the type of good to be plotted
+     param::str::color: str which is the color of the plot
+     param::str::x_label: str which is the x-axis label
+     param::str::y_label: str which is the y-axis label
+     param::str::title: str which is the title of the plot
+     param::list::lines_to_plot: list which is the list of lines to plot on the graph
     Returns:
-    Returns a line plot of the data for the category
+     Returns::altairchart:: a line plot of the data for the category
     """
     print("Product: ", category)
     df_in_question = df.copy()
@@ -119,15 +119,16 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
     return chart_final + text_annotation + arrow_annotation
 
 def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month'):
-    """plot supply and demand for Canada and USA
-    Accepts sales_df: DataFrame which is the data to be plotted
-    Accepts product: str which is the product to be plotted
-    Accepts date1: str which is the start date for the plot
-    Accepts date2: str which is the end date for the plot
-    Accepts principlestats_cat: str which is the principlestats category to be plotted
-    Accepts principlestats_cat2: str which is the principlestats category to be plotted
+    """Plot supply and demand for Canada and USA
+    Accepts arguments:
+     param::str::sales_df: DataFrame which is the data to be plotted
+     param::str::product: str which is the product to be plotted
+     param::str::date1: str which is the start date for the plot
+     param::str::date2: str which is the end date for the plot
+     param::str::principlestats_cat: str which is the principlestats category to be plotted
+     param::str::principlestats_cat2: str which is the principlestats category to be plotted
     Returns:
-    Returns a point plot of the supply and demand for the product
+     Returns altairchart::a point plot of the supply and demand for the product
     """
     
     sales_df = sales_df[(sales_df['GoodType'] == product) & ((sales_df['PrincipleStats'] == principlestats_cat) | (sales_df['PrincipleStats'] == principlestats_cat2))].copy()
@@ -153,21 +154,24 @@ def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '201
 
 
 def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False):
-    """regression discontinuity model for the data
-    Accepts df: DataFrame which is the data to be plotted
-    Accepts category: str which is the category to be plotted
-    Accepts date1: str which is the start date for the plot
-    Accepts date2: str which is the end date for the plot
-    Accepts date3: str which is the date for the regression discontinuity
-    Accepts date4: str which is the end date for the regression discontinuity
-    Accepts feature: str which is the feature to be plotted
-    Accepts goodtype: str which is the goodtype to be plotted
-    Accepts seasonality: bool which is the seasonality of the data
-    Accepts period: list which is the period of the data
-    Accepts heteroskedasticity: str which is the heteroskedasticity of the data
-    Accepts fuzzy_sharp_omit: bool which is the fuzzy sharp omit of the data
+    """Regression Discontinuity model for the data
+    Accepts:
+     param::df::pandas dataframe: DataFrame which is the data to be plotted
+     param::category::str: str which is the category to be plotted
+     param::date1::str: str which is the start date for the plot
+     param::date2::str: str which is the end date for the plot
+     param::date3::str: str which is the date for the regression discontinuity
+     param::date4::str: str which is the end date for the regression discontinuity
+     param::feature::str: str which is the feature to be plotted
+     param::goodtype::str: str which is the type of good to be plotted
+     param::seasonality::boolean: bool which is the seasonality of the data
+     param::period::list: list which is the period of the seasonality parameter
+     param::heteroskedasticity::str: str which is the heteroskedasticity of the data
+     param::fuzzy_sharp_omit::boolean: bool which plot trend and omits seasonality
+    
     Returns:
-    Returns a line plot of the regression discontinuity model for the data
+        
+     model: statsmodels.regression.linear_model.RegressionResultsWrapper, chart: altair chart, chart2: altair chart, chart3: altair chart
     """
     df_in_question = df.copy()
     if goodtype ==None: 

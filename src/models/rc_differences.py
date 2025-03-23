@@ -1,3 +1,5 @@
+"""This module is to plot visuals and use stats models for regression discontinuity and differences in differences to compare differences between US and Canada categories - the impact of tariffs on inflation"""
+
 import altair as alt
 import pandas as pd
 import numpy as np
@@ -11,10 +13,21 @@ from statsmodels.tsa.seasonal import seasonal_decompose, MSTL
 
 
 def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = None, color = None, x_label = 'Date', y_label = '', title = '', lines_to_plot = []):
-    """plot the line graph structure of the data for a given cateogry between two dates
-     Parameters Arguments:
-      Accepts: df: DataFrame, category: str, date1: str, date2: str, feature: str, goodtype: str, color: str, x_label: str, y_label: str, title: str, lines_to_plot: list
-      Returns: chart_final: altair chart
+    """Plot structure of data for line plot for each category of vehicle, groceries, energy, and clothing and footwear
+    Accepts Arguments:
+     param::str::df: DataFrame which is the data to be plotted
+     param::str::category: str which is the category to be plotted
+     param::str::date1: str which is the start date for the plot
+     param::str::date2: str which is the end date for the plot
+     param::str::feature: str which is the feature to be plotted
+     param::str::goodtype: str which is the type of good to be plotted
+     param::str::color: str which is the color of the plot
+     param::str::x_label: str which is the x-axis label
+     param::str::y_label: str which is the y-axis label
+     param::str::title: str which is the title of the plot
+     param::list::lines_to_plot: list which is the list of lines to plot on the graph
+    Returns:
+     Returns::altairchart:: a line plot of the data for the category
     """
     
     print("Product: ", category)
@@ -59,20 +72,25 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
         chart_final = alt.layer(*all_lines)
     return chart_final
 
-def plot_supply_and_demand_canada(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month'):
-    """Plot the supply and demand of a product in Canada
-     Parameters Arguments:
-      Accepts: sales_df: DataFrame, product: str, date1: str, date2: str, principlestats_cat: str, principlestats_cat2: str
-      Returns: chart1: altair chart
+def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month'):
+    """Plot supply and demand for Canada and USA
+    Accepts arguments:
+     param::str::sales_df: DataFrame which is the data to be plotted
+     param::str::product: str which is the product to be plotted
+     param::str::date1: str which is the start date for the plot
+     param::str::date2: str which is the end date for the plot
+     param::str::principlestats_cat: str which is the principlestats category to be plotted
+     param::str::principlestats_cat2: str which is the principlestats category to be plotted
+    Returns:
+     Returns altairchart::a point plot of the supply and demand for the product
     """
     sales_df = sales_df[(sales_df['GoodType'] == product) & ((sales_df['PrincipleStats'] == principlestats_cat) | (sales_df['PrincipleStats'] == principlestats_cat2))].copy()
-    
     scaler = StandardScaler()
     scaler2 = StandardScaler()
     mask1 = (sales_df['PrincipleStats']==principlestats_cat)
     mask2 = (sales_df['PrincipleStats']==principlestats_cat2)
     print(sales_df.loc[mask1, 'VALUE'].head())
-    
+    print(sales_df.loc[mask2, 'VALUE'].head())
     scaler.fit(sales_df[mask1]['VALUE'].to_numpy().reshape(-1,1))
     scaler2.fit(sales_df[mask2]['VALUE'].to_numpy().reshape(-1,1))
     sales_df.loc[mask1, "VALUE"] = scaler.transform(sales_df.loc[mask1, 'VALUE'].values.reshape(-1, 1))
@@ -88,10 +106,24 @@ def plot_supply_and_demand_canada(sales_df, product, date1 = '2018-05-01', date2
 
 
 def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False):
-    """Regression Discontinuity Model
-     Parameters Arguments:
-      Accepts: df: DataFrame, category: str, date1: str, date2: str, date3: str, date4: str, feature: str, goodtype: str, seasonality: str, period: list, heteroskedasticity: str, fuzzy_sharp_omit: bool
-      Returns: model: statsmodels.regression.linear_model.RegressionResultsWrapper, chart: altair chart, chart2: altair chart, chart3: altair chart
+    """Regression Discontinuity model for the data
+    Accepts:
+     param::df::pandas dataframe: DataFrame which is the data to be plotted
+     param::category::str: str which is the category to be plotted
+     param::date1::str: str which is the start date for the plot
+     param::date2::str: str which is the end date for the plot
+     param::date3::str: str which is the date for the regression discontinuity
+     param::date4::str: str which is the end date for the regression discontinuity
+     param::feature::str: str which is the feature to be plotted
+     param::goodtype::str: str which is the type of good to be plotted
+     param::seasonality::boolean: bool which is the seasonality of the data
+     param::period::list: list which is the period of the seasonality parameter
+     param::heteroskedasticity::str: str which is the heteroskedasticity of the data
+     param::fuzzy_sharp_omit::boolean: bool which plot trend and omits seasonality
+    
+    Returns:
+        
+     model: statsmodels.regression.linear_model.RegressionResultsWrapper, chart: altair chart, chart2: altair chart, chart3: altair chart
     """
     print("Product: ", category)
     df_in_question = df.copy()
@@ -233,8 +265,19 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
 def differences_differences(df, category1, category2, date1, date2, date3, date4=None, feature='Category', heteroskedasticity='HC3'):
     """Differences in Differences Model
      Parameters Arguments:
-      Accepts: df: DataFrame, category1: str, category2: str, date1: str, date2: str, date3: str, date4: str, feature: str, heteroskedasticity: str
-      Returns: model: statsmodels.regression.linear_model.RegressionResultsWrapper
+      Accepts: 
+       param::df::pandas dataframe: dataframe being used to analyze differences in differences
+       param::category1::str: string for category of differences in differences
+       param::category2::str: second string for category comparator
+       param::date1::str: str for start date
+       param::date2::str: str for end date
+       param::date3::str: str for (beginning) date of cut off
+       param::date4::str: str for end date of cutoff if fuzzy
+       param::feature::str: str for feature involved usually 'category'
+       param::heteroskedasticity::str: str for applying robust measure in case of heteroskedasticity
+     Returns:
+      model: 
+      statsmodels.regression.linear_model.RegressionResultsWrapper
     """
     df_in_question = df.copy()
     
@@ -268,9 +311,15 @@ def differences_differences(df, category1, category2, date1, date2, date3, date4
 #test parallel trends assumption:
 def plot_for_parallel_trends(df, date1, date2, category_tariff, category_non_tariff, category_3 = None):
     """Plot for Parallel Trends
-     Parameters Arguments:
-      Accepts: df: DataFrame, date1: str, date2: str, category_tariff: str, category_non_tariff: str, category_3: str
-      Returns: chart1: altair chart
+     Accepts Arguments:
+      param::df::pandas dataframe: dataframe to be analyzed for parallel trends
+      param::date1::str: string for beginning date
+      param::date2::str: string for end date
+      param::category_tariff::str: string for the tariffed category
+      param::category_non_tariff::str: string for non-tariffed category
+      param::category_3::str: string for third category as comparator
+     Returns: 
+      chart1::altair chart: chart for parallel trends assumption
     """
     df_Canada_CPI_Scaled_US_on_Canada_Tariffs = df[(df['REF_DATE']<=date2)&(df['REF_DATE']>=date1)]
     scale = StandardScaler()
