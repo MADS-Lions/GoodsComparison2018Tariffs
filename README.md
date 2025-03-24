@@ -12,17 +12,17 @@ This package is meant to provide analysis and insights into tariffs for categori
 
 # Table of Contents
 
-[Quickstart](#Quick start)
-[ProjectOrganization](#Project Organization)
-[Examples](#Examples)
-[ModelStructure](#ModelStructure)
+[Quickstart](#Quickstart) <br>
+[ProjectOrganization](#ProjectOrganization) <br>
+[Examples](#Examples) <br>
+[ModelStructure](#ModelStructure) <br>
 
 
-## Quick start
+## Quickstart
 python3 -m streamlit run ./notebooks/visualization_streamlit.py
 
 
-## Project Organization
+## ProjectOrganization
 ------------
 
     ├── LICENSE
@@ -81,7 +81,8 @@ regression_discontinuity_model(df, 'Groceries, '2018-05-01', '2018-12-01', '2018
 differences_differences(df, 'Vehicles', 'Education & Reading', '2018-05-01', '2018-12-01', '2018-07-01', date4='2018-10-01', feature='Category', heteroskedasticity='HC3')
 
 Some research narrative with used case examples on Groceries and Clothing & Footwear
-[NarrativeGroceriesClothing&Footwear]('./notebooks/Official_Differences_and_RC.ipynb')
+
+[NarrativeGroceriesClothing&Footwear]('./notebooks/Official_Differences_and_RC.ipynb') <br>
 
 
 # ModelStructure
