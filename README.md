@@ -3,9 +3,10 @@ ComparisonUSCanadianGoods2018Tariffs
 The purpose of this library is to:
 
 Compare the impact of 2018 Tariffs between US and Canadian goods and services using:
-    1. visualizations
-    2. differences in differences
-    3. regression discontinuity
+    1. Visualizations
+    2. Differences in differences
+    3. Regression discontinuity
+    4. ARIMA model
 
 This package is meant to provide analysis and insights into tariffs for categories in the US and America so you can compare and contrast the impact of tariffs in 2018 on inflation CPI index for those categories. The analysis is provided in the notebooks and is short but is to provide evidence for the overall report. Visualizations bring support to our ideas and can be explored with streamlit. 
 
@@ -70,7 +71,7 @@ python3 -m streamlit run ./notebooks/visualization_streamlit.py
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
-# Examples
+## Examples
 
 Example of how to use functions 
 
@@ -85,7 +86,7 @@ Some research narrative with used case examples on Groceries and Clothing & Foot
 [NarrativeGroceriesClothing&Footwear]('./notebooks/Official_Differences_and_RC.ipynb') <br>
 
 
-# ModelStructure
+## ModelStructure
 
 
 
