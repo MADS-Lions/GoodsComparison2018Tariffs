@@ -1,9 +1,28 @@
 ComparisonUSCanadianGoods2018Tariffs
 ==============================
+The purpose of this library is to:
 
-Comparing the impact of 2018 Tariffs between US and Canadian goods and services using differences in differences and regression discontinuity
+Compare the impact of 2018 Tariffs between US and Canadian goods and services using:
+    1. visualizations
+    2. differences in differences
+    3. regression discontinuity
 
-Project Organization
+This package is meant to provide analysis and insights into tariffs for categories in the US and America so you can compare and contrast the impact of tariffs in 2018 on inflation CPI index for those categories. The analysis is provided in the notebooks and is short but is to provide evidence for the overall report. Visualizations bring support to our ideas and can be explored with streamlit. 
+
+
+# Table of Contents
+
+[Quickstart](#Quick start)
+[ProjectOrganization](#Project Organization)
+[Examples](#Examples)
+[ModelStructure](#ModelStructure)
+
+
+## Quick start
+python3 -m streamlit run ./notebooks/visualization_streamlit.py
+
+
+## Project Organization
 ------------
 
     ├── LICENSE
@@ -51,18 +70,23 @@ Project Organization
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
-#Example of using visualization to investigate dates related to the tariffs
-python3 -m streamlit run ./notebooks/visualization_streamlit.py
+# Examples
 
-#Example of how to use functions 
+Example of how to use functions 
 
 #Used case shows regression discontinuity model from May 2018 to December 2018 with a fuzzy regression with treatment period from 2018-07-01 to 2018-10-01 and differences in differences for two categories Vehicles and Education & Reading - if there is a second date it will average between the two dates in this case '2017-07-01' to '2017-10-01'
 
 regression_discontinuity_model(df, 'Groceries, '2018-05-01', '2018-12-01', '2018-07-01', '2018-10-01', feature = 'Category', heteroskedasticity = 'HC3', fuzzy_sharp_omit = False)
 
-differences_differences(df, 'Vehicles', 'Education & Reading', '2018-05-01', '2018-12-01', '2018-07-01', date4='2018-10-01', feature='Category', heteroskedasticity='HC3'):
+differences_differences(df, 'Vehicles', 'Education & Reading', '2018-05-01', '2018-12-01', '2018-07-01', date4='2018-10-01', feature='Category', heteroskedasticity='HC3')
 
-This package is meant to provide analysis and insights into tariffs for categories in the US and America so you can compare and contrast the impact of tariffs in 2018 on inflation CPI index for those categories. The analysis is provided in the notebooks and is short but is to provide evidence for the overall report. Visualizations bring support to our ideas and can be explored with streamlit. 
+Some research narrative with used case examples on Groceries and Clothing & Footwear
+[NarrativeGroceriesClothing&Footwear]('./notebooks/Official_Differences_and_RC.ipynb')
+
+
+# ModelStructure
+
+
 
 
 
