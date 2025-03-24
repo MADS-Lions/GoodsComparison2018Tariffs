@@ -9,7 +9,7 @@ Compare the impact of 2018 Tariffs between US and Canadian goods and services us
     3. Regression discontinuity <br>
     4. ARIMA model <br>
 
-This package is meant to provide analysis and insights into tariffs for categories in the US and America so you can compare and contrast the impact of tariffs in 2018 on inflation CPI index for those categories. The analysis is provided in the notebooks and is short but is to provide evidence for the overall report. Visualizations bring support to our ideas and can be explored with streamlit. 
+This package is meant to provide analysis and insights into tariffs for categories in the US and Canada so you can compare and contrast the impact of tariffs in 2018 on inflation CPI index for those categories. The analysis is provided in the notebooks and is short but is to provide evidence for the overall report. Visualizations bring support to our ideas and can be explored with streamlit. 
 
 
 # Table of Contents
