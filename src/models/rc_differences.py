@@ -233,7 +233,7 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
             
             df_in_question['PredTreatment'] = first_stage_model.predict(df_in_question)
             
-            
+        #second_stage_model    
             model = smf.ols(formula = 'VALUE_DETREND ~ PredTreatment + Num_Date + PredTreatment:Num_Date', data=df_in_question).fit(cov_type=heteroskedasticity)
     else:
         if date4==None:
@@ -246,7 +246,7 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
             
             df_in_question['PredTreatment'] = first_stage_model.predict(df_in_question)
             
-            
+        #second_stage_model   
             model = smf.ols(formula = 'VALUE_TREND ~ PredTreatment + Num_Date + PredTreatment:Num_Date', data=df_in_question).fit(cov_type=heteroskedasticity)
 
     if fuzzy_sharp_omit == True:
