@@ -8,14 +8,16 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = MADS Lions
 PROJECT_NAME = GoodsComparison2018Tariffs
-PYTHON_INTERPRETER = python3
+PYTHON_INTERPRETER = /usr/bin/python3
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
 else
 HAS_CONDA=True
 endif
-
+# Define variables
+NOTEBOOK = ./notebooks/DataCleaningAndManipulation.ipynb
+OUTPUT_NOTEBOOK = output.ipynb
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
@@ -28,6 +30,20 @@ requirements: test_environment
 ## Make Dataset
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+
+
+
+# Rule to run notebook
+run_notebook:
+	$(PYTHON_INTERPRETER) -m pip install nbconvert > /dev/null
+	$(PYTHON_INTERPRETER) -m nbconvert --to notebook --execute $(NOTEBOOK)
+# Rule to clean dataset
+clean_data:
+    python -c "import pandas as pd; df = pd.read_csv('dataset.csv'); df.drop_duplicates().to_csv('cleaned_dataset.csv', index=False)"
+
+# Rule to create dataset
+create_dataset:
+    python -c "import pandas as pd; data = {'Name': ['Alice', 'Bob'], 'Age': [25, 30]}; pd.DataFrame(data).to_csv('dataset.csv', index=False)"
 
 ## Delete all compiled Python files
 clean:

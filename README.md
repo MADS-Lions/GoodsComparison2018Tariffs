@@ -3,7 +3,7 @@ ComparisonUSCanadianGoods2018Tariffs
 # Introduction
 The purpose of this library is to:
 
-Compare the impact of 2018 Tariffs between US and Canadian goods and services using: <br>
+Compare the impact of 2018 Tariffs between US and Canadian goods and services using: <br><br>
     1. Visualizations <br>
     2. Differences in differences <br>
     3. Regression discontinuity <br>
@@ -23,6 +23,9 @@ This package is meant to provide analysis and insights into tariffs for categori
 ## Quickstart
 python3 -m streamlit run ./notebooks/visualization_streamlit.py
 
+use the Makefile to run the following:
+1. make requirements
+2. make run_notebook
 
 ## ProjectOrganization
 ------------
