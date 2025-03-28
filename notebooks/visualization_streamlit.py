@@ -1,3 +1,4 @@
+"This module is to present a visual with streamlit on ideas related to tariffs - comparing American and Canadian goods including Clothing&Footwear, Vehicles, Energy, and Groceries to see the impact tariffs had on their inflation"
 import altair as alt
 import pandas as pd
 import numpy as np
@@ -241,6 +242,26 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         
     return chart4
 
+def plot_individual_product(df, category, date1, date2):
+    """Plot individual product for the data
+    Accepts:
+     param::df::pandas dataframe: DataFrame which is the data to be plotted
+     param::category::str: str which is the category to be plotted
+     param::date1::str: str which is the start date for the plot
+     param::date2::str: str which is the end date for the plot
+     
+     Returns:
+     chart: altair chart
+    """
+    df_final = df[(df['Category'] == category)&(df['REF_DATE']>=date1)&(df['REF_DATE']<=date2)]
+    chart = alt.Chart(df_final).mark_line().encode(
+        x=alt.X('REF_DATE', title = 'Date'),
+        y='VALUE',
+        color='Products and product groups'
+    )
+    return chart
+
+
 American_supply_demand = pd.read_csv('../data/processed/USA_Sales_Processed_Final.csv')
 Canadian_supply_demand = pd.read_csv('../data/processed/Canada_Sales_Processed_Final.csv')
 American_df = pd.read_csv('../data/processed/USA_CPI_Processed_2018_2019.csv')
@@ -278,14 +299,7 @@ Canadian_df.drop(columns = 'Products and product groups', inplace = True)
 American_df = American_df.groupby(['REF_DATE', 'Category']).median().reset_index()
 Canadian_df = Canadian_df.groupby(['REF_DATE', 'Category']).median().reset_index()
 
-def plot_individual_product(df, category, date1, date2):
-    df_final = df[(df['Category'] == category)&(df['REF_DATE']>=date1)&(df['REF_DATE']<=date2)]
-    chart = alt.Chart(df_final).mark_line().encode(
-        x=alt.X('REF_DATE', title = 'Date'),
-        y='VALUE',
-        color='Products and product groups'
-    )
-    return chart
+
 
 if selected_option == 'Clothing & Footwear':
     chart_clothing_usa = regression_discontinuity_model(American_df, 'Clothing & Footwear', '2017-01-01', '2019-08-01', '2017-10-01', '2019-02-01', seasonality=True, fuzzy_sharp_omit = True)

@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv # type: ignore
 import pandas as pd # type: ignore
-from scipy.signal import detrend
+
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
@@ -32,10 +32,10 @@ def main(input_filepath, output_filepath):
 def load_data(input_filepath, which_data_file, header = 0):
     """Load data from input_filepath and return a pandas dataframe.
     Args:
-        input_filepath::str: The path to the raw data file.
-        which_data_file::str: The type of data file to load.
+        Param::input_filepath::str: The path to the raw data file.
+        Param::which_data_file::str: The type of data file to load.
     Returns:
-        data::pandas_df: The loaded data.
+        Param::data::pandas_df: The loaded data.
     """
     if which_data_file == '.csv':
         data = pd.read_csv(input_filepath, header = header)
@@ -46,8 +46,8 @@ def load_data(input_filepath, which_data_file, header = 0):
 def manipulate_data(data, which_data_file):
     """Load data and manipulate to return a pandas dataframe ready for visualization and analysis.
     Args:
-        data::pandas_df: The loaded data.
-        which_data_file::str: The data file to load (Canada or US).
+        Param::data::pandas_df: The loaded data.
+        Param::which_data_file::str: The data file to load (Canada or US).
         Returns:
         data::pandas_df: The manipulated and formatted data.
     """
@@ -141,8 +141,8 @@ def manipulate_data(data, which_data_file):
 def check_for_na(data, column_name):
     """Check if there are any missing values in the column_name of the data.
     Args:
-        data::pandas_df: The data to check for missing values.
-        column_name::str: The column to check for missing values.
+        Param::data::pandas_df: The data to check for missing values.
+        Param::column_name::str: The column to check for missing values.
     Returns:
         bool: True if there are missing values, False otherwise.
     """
@@ -154,8 +154,8 @@ def check_for_na(data, column_name):
 def check_data_type(data, column_name):
     """Check the data type of the column_name in the data.
     Args:
-        data::pandas_df: The data to check for missing values.
-        column_name::str: The column to check for missing values.
+        Param::data::pandas_df: The data to check for missing values.
+        Param::column_name::str: The column to check for missing values.
     Returns:
         str: The data type of the column_name in the data.
     """
@@ -164,9 +164,9 @@ def check_data_type(data, column_name):
 def test_unit_dtype(data, column_name, dtype):
     """Check if the data type of the column_name in the data is equal to dtype.
     Args:
-        data::pandas_df: The data to check for missing values.
-        column_name::str: The column to check for missing values.
-        dtype::str: The data type to check for.
+        Param::data::pandas_df: The data to check for missing values.
+        Param::column_name::str: The column to check for missing values.
+        Param::dtype::str: The data type to check for.
     Returns:
         bool: True if the data type of the column_name in the data is equal to dtype, False otherwise.
     """ 
@@ -175,10 +175,10 @@ def test_unit_dtype(data, column_name, dtype):
 def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt):
     """Check if the column_name in the data is less than or greater than value.
     Args:
-        data::pandas_df: The data to check for missing values.
-        column_name::str: The column to check for missing values.
-        value::int: The value to check for.
-        gt_lt::str: The condition to check for.
+        Param::data::pandas_df: The data to check for missing values.
+        Param::column_name::str: The column to check for missing values.
+        Param::value::int: The value to check for.
+        Param::gt_lt::str: The condition to check for.
     Returns:
         bool: True if any of the column_name in the data is less than or greater than value, False otherwise.
     """
@@ -190,10 +190,10 @@ def test_unit_less_than_or_greater_than(data, column_name, value, gt_lt):
 def test_unit_between(data, column_name, value1, value2):
     """Unit test to check if the column_name in the data is between value1 and value2.
     Args:
-        data::pandas_df: The data to check for missing values.
-        column_name::str: The column to check for missing values.
-        value1::int: The first value to check for.
-        value2::int: The second value to check for.
+        Param::data::pandas_df: The data to check for missing values.
+        Param::column_name::str: The column to check for missing values.
+        Param::value1::int: The first value to check for.
+        Param::value2::int: The second value to check for.
     Returns:
         bool: True if all of the column_name in the data is between value1 and value2, False otherwise.
     """
@@ -202,8 +202,8 @@ def test_unit_between(data, column_name, value1, value2):
 def save_data(data, output_filepath):
     """Save the data to the output_filepath.
     Args:
-        data::pandas_df: The data to save.
-        output_filepath::str: The path to save the data.
+        Param::data::pandas_df: The data to save.
+        Param::output_filepath::str: The path to save the data.
     Returns:
         None
     """
@@ -213,7 +213,7 @@ def save_data(data, output_filepath):
 def look_at_missing_values(data, feature):
     """Look at missing values in the data.
     Args:
-        data::pandas_df: The data to look at missing values.
+        Param::data::pandas_df: The data to look at missing values.
     Returns:
         None
     """

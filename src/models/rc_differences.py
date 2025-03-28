@@ -105,7 +105,7 @@ def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '201
     return chart1
 
 
-def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False):
+def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False, point_line = 'line'):
     """Regression Discontinuity model for the data
     Accepts:
      param::df::pandas dataframe: DataFrame which is the data to be plotted
@@ -138,21 +138,38 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         df_in_question.dropna(subset=['VALUE_DIFF'], inplace=True)
         df_in_question['VALUE_DETREND'] = detrend(df_in_question['VALUE_DIFF'])
         df_in_question = df_in_question[(df_in_question['REF_DATE']>=date1) & (df_in_question['REF_DATE']<=date2)]
-        chart = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DIFF',
-            color=feature
-        )
-        chart2 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE',
-            color=feature
-        )
-        chart3 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DETREND',
-            color=feature
-        )
+        if point_line =='line':
+            chart = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='VALUE_DIFF',
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='VALUE',
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='VALUE_DETREND',
+                color=feature
+            )
+        else:
+            chart = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='VALUE_DIFF',
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='VALUE',
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='VALUE_DETREND',
+                color=feature
+            )
         display(chart2)
         display(chart)
         display(chart3)
@@ -173,33 +190,57 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         df_in_question.dropna(subset=['VALUE_DIFF'], inplace=True)
         df_in_question['VALUE_DETREND'] = detrend(df_in_question['VALUE_DIFF'])
         df_in_question = df_in_question[(df_in_question['REF_DATE']>=date1) & (df_in_question['REF_DATE']<=date2)]
-        chart = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DIFF',
-            color=feature
-        )
-        chart2 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE',
-            color=feature
-        )
-        chart3 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DETREND',
-            color=feature
-        )
-        chart4 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='TREND',
-            color=feature
-        )
+        if point_line =='line':
+            chart = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='VALUE_DIFF',
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='VALUE',
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='VALUE_DETREND',
+                color=feature
+            )
+            chart4 = alt.Chart(df_in_question).mark_line().encode(
+                x='REF_DATE',
+                y='TREND',
+                color=feature
+            )
+        else:
+            chart = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='VALUE_DIFF',
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='VALUE',
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='VALUE_DETREND',
+                color=feature
+            )
+            chart4 = alt.Chart(df_in_question).mark_point().encode(
+                x='REF_DATE',
+                y='TREND',
+                color=feature
+            )
         display(chart2)
         display(chart)
         display(chart3)
         display(chart4)
     
-    
-    df_in_question['treat'] = np.where((df_in_question['REF_DATE']>=date3) & (df_in_question['REF_DATE']<=date4), 1, 0)
+    if date4 == None:
+        pass
+    else:
+        df_in_question['treat'] = np.where((df_in_question['REF_DATE']>=date3) & (df_in_question['REF_DATE']<=date4), 1, 0)
     if date4==None:
         df_in_question['above_or_below'] = np.where(df_in_question['REF_DATE']>date3, 1, 0)
     else:
@@ -218,7 +259,7 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
             final_date = num_date
     
     
-                
+    print(final_date)
     df_in_question['Num_Date'] = df_in_question['Date_Replaced'] - final_date
     
     df_in_question['Num_Date'] = df_in_question['Num_Date'].astype(float)
