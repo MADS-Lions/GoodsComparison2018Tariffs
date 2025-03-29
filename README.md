@@ -44,8 +44,9 @@ use the Makefile to run the following:
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    │   ├── DataCleaningAndManipulation.ipynb For cleaning and manipulating the datasets
+    │   ├── Official_Differences_and_RC.ipynb For making a narrative about clothing and groceries and the impact of tariffs on them providing evidence with visuals regression discontinuity and differences in differences
+                              
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
@@ -67,8 +68,8 @@ use the Makefile to run the following:
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
     │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
+    │   │   ├── rc_difference.py
+    │   │   └── 
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
