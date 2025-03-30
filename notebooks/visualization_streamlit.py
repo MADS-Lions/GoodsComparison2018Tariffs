@@ -119,7 +119,7 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
     
     return chart_final + text_annotation + arrow_annotation
 
-def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month'):
+def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month', point_line='point', x_label = '', y_label = '', title = ''):
     """Plot supply and demand for Canada and USA
     Accepts arguments:
      param::str::sales_df: DataFrame which is the data to be plotted
@@ -146,12 +146,19 @@ def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '201
     sales_df.loc[mask2, "VALUE"] = scaler2.transform(sales_df.loc[mask2, 'VALUE'].values.reshape(-1, 1))
     sales_df = sales_df[(sales_df['REF_DATE']>=date1) & (sales_df['REF_DATE']<=date2)]
     
-    chart1 = alt.Chart(sales_df).mark_point().encode(
-    x=alt.X('REF_DATE', title='Date'),
-    y='VALUE',
-    color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
-    )
-    return chart1
+    if point_line == 'point':
+        chart1 = alt.Chart(sales_df).mark_point().encode(
+        x=alt.X('REF_DATE', title = x_label),
+        y=alt.Y('VALUE', title = y_label),
+        color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
+        )
+    else: 
+        chart1 = alt.Chart(sales_df).mark_line().encode(
+        x=alt.X('REF_DATE', title = x_label),
+        y=alt.Y('VALUE', title = y_label),
+        color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
+        )
+    return chart1.properties(title=title)
 
 
 def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False):
@@ -275,9 +282,9 @@ dict_USA = df_model_data_USA.drop_duplicates(subset=['Product_Service']).set_ind
 
 American_df = pd.melt(American_df, var_name = 'Products and product groups',value_name = 'VALUE', id_vars = 'REF_DATE')
 
-options = ['Vehicles', 'Groceries', 'Energy', 'Clothing & Footwear']
-options2 = ['Motor vehicle parts manufacturing [3363]', 'Food manufacturing [311]', 'Petroleum and coal product manufacturing [324]', 'Apparel manufacturing [315]']
-options3 = ['Motor Vehicle Bodies, Trailers, and Parts', 'Food Products', 'Petroleum and Coal Products', 'Apparel']
+options = ['Groceries', 'Energy', 'Clothing and footwear']
+options2 = ['Food manufacturing [311]', 'Petroleum and coal product manufacturing [324]', 'Apparel manufacturing [315]']
+options3 = ['Food Products', 'Petroleum and Coal Products', 'Apparel']
 start_date, end_date = st.date_input("Select a date range", value = (date(2017,1,1), date(2020,2,1)))
 selected_option = st.selectbox('Select a category', options)
 Canadian_df['Category'] = Canadian_df['Products and product groups'].map(dict_CAN)
@@ -301,8 +308,8 @@ Canadian_df = Canadian_df.groupby(['REF_DATE', 'Category']).median().reset_index
 
 
 
-if selected_option == 'Clothing & Footwear':
-    chart_clothing_usa = regression_discontinuity_model(American_df, 'Clothing & Footwear', '2017-01-01', '2019-08-01', '2017-10-01', '2019-02-01', seasonality=True, fuzzy_sharp_omit = True)
+if selected_option == 'Clothing and footwear':
+    chart_clothing_usa = regression_discontinuity_model(American_df, 'Clothing and Footwear', '2017-01-01', '2019-08-01', '2017-10-01', '2019-02-01', seasonality=True, fuzzy_sharp_omit = True)
     chart_clothing_can = regression_discontinuity_model(Canadian_df, selected_option, '2017-08-01', '2019-10-01', '2019-03-01', '2019-08-01', seasonality=True)
 
 chart = plot_structure(American_df, selected_option, str(start_date), str(end_date), x_label='Date', y_label="CPI Index for Inflation")
@@ -313,7 +320,7 @@ st.write("American Inflation for ", selected_option)
 st.altair_chart(chart)
 st.write("Canadian Inflation for ", selected_option)
 st.altair_chart(chart2)
-if selected_option == 'Clothing & Footwear':
+if selected_option == 'Clothing and Footwear':
     st.write("American Trend Inflation for ", selected_option)
     st.altair_chart(chart_clothing_usa)
     st.write("Canadian Trend Inflation for ", selected_option)
@@ -332,12 +339,9 @@ for option, option2, option3 in zip(options, options2, options3):
     if selected_option == option:
         selected_option2 = option2
         selected_option3 = option3
-if selected_option == 'Vehicles':
-    chart5 = plot_supply_and_demand(American_supply_demand, selected_option3, str(start_date), str(end_date), principlestats_cat='New Orders Percent Change Monthly', principlestats_cat2='Total Inventories')
-    
-else:
-    chart5 = plot_supply_and_demand(American_supply_demand, selected_option3, str(start_date), str(end_date), principlestats_cat='Finished Goods Inventories Percent Change Monthly', principlestats_cat2='Value of Shipments Percent Change Monthly')
-chart6 = plot_supply_and_demand(Canadian_supply_demand, selected_option2, str(start_date), str(end_date))
+
+chart5 = plot_supply_and_demand(American_supply_demand, selected_option3, str(start_date), str(end_date), "Finished Goods Inventories", "Inventories to Shipments Ratios", x_label='Date', y_label = 'US Supply and Demand of Manufacturing for ' + selected_option3, point_line='line')
+chart6 = plot_supply_and_demand(Canadian_supply_demand, selected_option2, str(start_date), str(end_date), x_label='Date', y_label = 'Canadian Supply and Demand of Manufacturing for ' + selected_option2, point_line='line')
 
 chart5 = chart5.configure_axis(grid=False).properties(width=4500, height=650).interactive()
 chart6 = chart6.configure_axis(grid=False).properties(width=4500, height=650).interactive()
@@ -348,3 +352,73 @@ st.altair_chart(chart5, use_container_width=True)
 st.write("Supply and Demand for ", selected_option2, " in Canada")
 st.altair_chart(chart6, use_container_width=True)
 
+
+
+US_sales_groceries_clothing = pd.read_csv("../data/raw/ClothingGroceriesUSSalesData.csv")
+US_sales_groceries_clothing['Clothing Sales'] = US_sales_groceries_clothing['Clothing Sales'].str.replace(',', '')  
+US_sales_groceries_clothing['Grocery Sales'] = US_sales_groceries_clothing['Grocery Sales'].str.replace(',', '')
+US_sales_groceries_clothing['Gas Sales'] = US_sales_groceries_clothing['Gas Sales'].str.replace(',', '')
+US_sales_groceries_clothing['Clothing Sales'] = US_sales_groceries_clothing['Clothing Sales'].astype(float)
+US_sales_groceries_clothing['Grocery Sales'] = US_sales_groceries_clothing['Grocery Sales'].astype(float)
+US_sales_groceries_clothing['Gas Sales'] = US_sales_groceries_clothing['Gas Sales'].astype(float)
+US_sales_groceries_clothing['REF_DATE'] = pd.to_datetime(US_sales_groceries_clothing['Date'])
+US_sales_groceries_clothing['Clothing Sales'] = scale.fit_transform(US_sales_groceries_clothing['Clothing Sales'].values.reshape(-1, 1))
+US_sales_groceries_clothing['Grocery Sales'] = scale.fit_transform(US_sales_groceries_clothing['Grocery Sales'].values.reshape(-1, 1))
+US_sales_groceries_clothing['Gas Sales'] = scale.fit_transform(US_sales_groceries_clothing['Gas Sales'].values.reshape(-1, 1))
+US_sales_groceries = US_sales_groceries_clothing[['REF_DATE', 'Grocery Sales']]
+US_sales_groceries['Category'] = ['Groceries']*len(US_sales_groceries)
+US_sales_groceries['VALUE'] = US_sales_groceries['Grocery Sales']
+Sales_Canada_Groceries = pd.read_csv('../data/raw/20100082.csv')
+dict_month = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'}
+Sales_Canada_Groceries['Month'] = Sales_Canada_Groceries['REF_DATE'].str.split('-').str[0]
+Sales_Canada_Groceries['Month'] = Sales_Canada_Groceries['Month'].map(dict_month)
+
+Sales_Canada_Groceries['Year'] = ['20']*len(Sales_Canada_Groceries) + Sales_Canada_Groceries['REF_DATE'].str.split('-').str[1]
+Sales_Canada_Groceries['Day'] = ['01']*len(Sales_Canada_Groceries)
+Sales_Canada_Groceries['REF_DATE'] = pd.to_datetime(Sales_Canada_Groceries[['Year', 'Month', 'Day']])
+Sales_Canada_Groceries['Category'] = Sales_Canada_Groceries['North American Industry Classification System (NAICS)']
+if selected_option == 'Clothing and footwear':
+    
+    chart7 = alt.Chart(US_sales_groceries_clothing).mark_line().encode(
+        x = alt.X('REF_DATE', title = 'Date'),
+        y = alt.Y('Clothing InventorySales', title = 'Inventory to Sales Ratio for Clothing in US')
+    )
+    Sales_Canada_Clothing = Sales_Canada_Groceries[(Sales_Canada_Groceries['REF_DATE'] >= pd.Timestamp(start_date)) & (Sales_Canada_Groceries['REF_DATE']<= pd.Timestamp(end_date)) & (Sales_Canada_Groceries['Category'] == 'Clothing and clothing accessories retailers [4581]')]
+    scale = StandardScaler()
+    Sales_Canada_Clothing['VALUE'] = scale.fit_transform(Sales_Canada_Clothing['VALUE'].to_numpy().reshape(-1,1))
+    chart8 = alt.Chart(Sales_Canada_Clothing).mark_line().encode(
+        x = alt.X('REF_DATE', title = 'Date'),
+        y = alt.Y('VALUE', title = 'Retail Sales of Clothing and Footwear in Canada')
+    )
+elif selected_option == 'Groceries':
+    chart7 = alt.Chart(US_sales_groceries).mark_line().encode(
+        x = alt.X('REF_DATE', title = 'Date'),
+        y = alt.Y('Grocery Sales', title = 'Sales for US Groceries')
+    )
+    Sales_Canada_Groc = Sales_Canada_Groceries[(Sales_Canada_Groceries['REF_DATE'] >= pd.Timestamp(start_date)) & (Sales_Canada_Groceries['REF_DATE']<= pd.Timestamp(end_date)) & (Sales_Canada_Groceries['Category'] == 'Supermarkets and other grocery retailers (except convenience retailers) [44511]')]
+    scale = StandardScaler()
+    Sales_Canada_Groc['VALUE'] = scale.fit_transform(Sales_Canada_Groc['VALUE'].to_numpy().reshape(-1,1))
+    chart8 = alt.Chart(Sales_Canada_Groc).mark_point().encode(
+        x = alt.X('REF_DATE', title = 'Date'),
+        y = alt.Y('VALUE', title = 'Retail Sales of Groceries in Canada')
+    )
+
+else: 
+    chart7 = alt.Chart(US_sales_groceries_clothing).mark_line().encode(
+        x = alt.X('REF_DATE', title = 'Date'),
+        y = alt.Y('Gas Sales', title = 'Sales for US Gas')
+    )
+
+    Sales_Canada_Gas = Sales_Canada_Groceries[(Sales_Canada_Groceries['REF_DATE'] >= pd.Timestamp(start_date)) & (Sales_Canada_Groceries['REF_DATE']<= pd.Timestamp(end_date)) & (Sales_Canada_Groceries['Category'] == 'Gasoline stations and fuel vendors [457]')]
+    scale = StandardScaler()
+    Sales_Canada_Gas['VALUE'] = scale.fit_transform(Sales_Canada_Gas['VALUE'].to_numpy().reshape(-1,1))
+    
+    chart8 = alt.Chart(Sales_Canada_Gas).mark_point().encode(
+        x = alt.X('REF_DATE', title = 'Date'),
+        y = alt.Y('VALUE', title = 'Retail Sales of Fuel and Gas in Canada')
+    )
+
+st.write("Sales Data for ", selected_option, " in the USA")
+st.altair_chart(chart7, use_container_width=True)
+st.write("Sales Data for ", selected_option, " in Canada")
+st.altair_chart(chart8, use_container_width=True)
