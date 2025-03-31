@@ -31,7 +31,10 @@ requirements: test_environment
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
-
+pull_dvc: 
+	$(PYTHON_INTEPRETER) -m pip install dvc
+	cd ./data
+	dvc pull
 
 # Rule to run notebook
 run_notebook:

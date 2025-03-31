@@ -25,7 +25,8 @@ python3 -m streamlit run ./notebooks/visualization_streamlit.py
 
 use the Makefile to run the following:
 1. make requirements
-2. make run_notebook
+2. make dvc_pull
+3. make run_notebook
 
 ## ProjectOrganization
 ------------
