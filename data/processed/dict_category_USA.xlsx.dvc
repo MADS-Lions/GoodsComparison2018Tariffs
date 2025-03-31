@@ -1,0 +1,5 @@
+outs:
+- md5: 7bc64d0ddfe72ee55fe0f83430229abc
+  size: 12112
+  hash: md5
+  path: dict_category_USA.xlsx
