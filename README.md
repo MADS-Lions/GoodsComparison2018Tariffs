@@ -32,7 +32,7 @@ use the Makefile to run the following:
 ------------
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
+    ├── Makefile           <- Makefile with commands like `make requirements` or `make pull_dvc`
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── external       <- Data from third party sources.
@@ -89,12 +89,15 @@ regression_discontinuity_model(df, 'Groceries, '2018-05-01', '2018-12-01', '2018
 
 differences_differences(df, 'Vehicles', 'Education & Reading', '2018-05-01', '2018-12-01', '2018-07-01', date4='2018-10-01', feature='Category', heteroskedasticity='HC3')
 
-Some research narrative with used case examples on Groceries and Clothing & Footwear
+Some research narrative for modelling categories with visuals, regression discontinuity, and ARIMA models
 
-[NarrativeGroceriesClothing&Footwear]('./notebooks/Official_Differences_and_RC.ipynb') <br>
+[NarrativeGroceriesClothing&Footwear]('./notebooks/Analysis_Visuals_and_Modes: Groceries_and_Clothing&Footwear.ipynb') <br>
+[ModellingCanadaARIMAForAllCategories]('./notebooks/Modelling: Canada_Arima_Forecasts_9_main_categories.ipynb') <br>
+[ModellingUSARIMAForAllCategories]('./notebooks/Modelling: US_arima_forecasts.ipynb') <br>
 
 
-## ModelStructure
+
+
 
 
 
