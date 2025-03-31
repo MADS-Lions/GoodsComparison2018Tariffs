@@ -33,7 +33,6 @@ data: requirements
 
 pull_dvc: 
 	$(PYTHON_INTEPRETER) -m pip install dvc
-	cd ./data
 	dvc pull
 
 # Rule to run notebook
