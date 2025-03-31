@@ -1,0 +1,5 @@
+outs:
+- md5: fd106b2e7d5010f446ecace4a15073b4
+  size: 117800
+  hash: md5
+  path: USA_CPI_Processed_2018_2019.csv

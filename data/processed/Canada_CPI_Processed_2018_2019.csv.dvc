@@ -1,0 +1,5 @@
+outs:
+- md5: a6da3882f7259b40d81543529226eec7
+  size: 535544
+  hash: md5
+  path: Canada_CPI_Processed_2018_2019.csv
