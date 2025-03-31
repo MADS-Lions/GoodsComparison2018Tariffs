@@ -12,7 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from statsmodels.tsa.seasonal import seasonal_decompose, MSTL
 
 
-def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = None, color = None, x_label = 'Date', y_label = '', title = '', lines_to_plot = []):
+def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = None, color = None, x_label = 'Date', y_label = '', title = '', text_to_plot=[], lines_to_plot = []):
     """Plot structure of data for line plot for each category of vehicle, groceries, energy, and clothing and footwear
     Accepts Arguments:
      param::str::df: DataFrame which is the data to be plotted
@@ -36,7 +36,7 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
         pass
     else:
         all_lines = []
-        for line in lines_to_plot:
+        for text, line in zip(text_to_plot, lines_to_plot):
         
             vertical_line = alt.Chart(pd.DataFrame({'x': [line]})).mark_rule(
                 color='black',
@@ -44,7 +44,14 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
                 strokeWidth = 2).encode(
                 x='x'
             )
-            all_lines.append(vertical_line)
+            text = alt.Chart(pd.DataFrame({'x': [line], 'y': [text]})).mark_text(
+                align='center', dy=-10, fontSize=10, angle=45, fontWeight='bold'
+            ).encode(
+                x='x:O',
+                
+                text=alt.Text('y:N')
+            )
+            all_lines.append(vertical_line+text)
     if goodtype == None:
         df_in_question = df_in_question[df_in_question[feature] == category]
     else:
@@ -72,7 +79,7 @@ def plot_structure(df, category, date1, date2, feature = 'Category', goodtype = 
         chart_final = alt.layer(*all_lines)
     return chart_final
 
-def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month'):
+def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '2018-09-01', principlestats_cat = 'Total inventory, estimated values of total inventory at end of the month', principlestats_cat2 = 'Unfilled orders, estimated values of orders at end of month', point_line='point', x_label = '', y_label = '', title = ''):
     """Plot supply and demand for Canada and USA
     Accepts arguments:
      param::str::sales_df: DataFrame which is the data to be plotted
@@ -96,13 +103,20 @@ def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '201
     sales_df.loc[mask1, "VALUE"] = scaler.transform(sales_df.loc[mask1, 'VALUE'].values.reshape(-1, 1))
     sales_df.loc[mask2, "VALUE"] = scaler2.transform(sales_df.loc[mask2, 'VALUE'].values.reshape(-1, 1))
     sales_df = sales_df[(sales_df['REF_DATE']>=date1) & (sales_df['REF_DATE']<=date2)]
+    if point_line == 'point':
+        chart1 = alt.Chart(sales_df).mark_point().encode(
+        x=alt.X('REF_DATE', title = x_label),
+        y=alt.Y('VALUE', title = y_label),
+        color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
+        )
+    else: 
+        chart1 = alt.Chart(sales_df).mark_line().encode(
+        x=alt.X('REF_DATE', title = x_label),
+        y=alt.Y('VALUE', title = y_label),
+        color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
+        )
+    return chart1.properties(title=title)
     
-    chart1 = alt.Chart(sales_df).mark_point().encode(
-    x='REF_DATE',
-    y='VALUE',
-    color = alt.Color('PrincipleStats', legend = alt.Legend(title = 'Supply and Demand'))
-    )
-    return chart1
 
 
 def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False, point_line = 'line'):
