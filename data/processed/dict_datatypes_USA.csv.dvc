@@ -1,0 +1,5 @@
+outs:
+- md5: 0efb39edcea76ae595926b07df54b7dd
+  size: 765
+  hash: md5
+  path: dict_datatypes_USA.csv
