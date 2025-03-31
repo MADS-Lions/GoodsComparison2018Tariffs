@@ -25,7 +25,7 @@ python3 -m streamlit run ./notebooks/visualization_streamlit.py
 
 use the Makefile to run the following:
 1. make requirements
-2. make dvc_pull
+2. make pull_dvc
 3. make run_notebook
 
 ## ProjectOrganization
@@ -45,9 +45,11 @@ use the Makefile to run the following:
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │   ├── DataCleaningAndManipulation.ipynb For cleaning and manipulating the datasets
-    │   ├── Official_Differences_and_RC.ipynb For making a narrative about clothing and groceries and the impact of tariffs on them providing evidence with visuals regression discontinuity and differences in differences
-                              
+    │   ├── Analysis_Visuals_and_Models: Groceries_and_Clothing&Footwear.ipynb For Analysis of Groceries and Clothing&Footwear Categories for comparing American and Canadian felt impact from 2018 tariffs. Making a narrative about clothing and groceries and the impact of tariffs on them providing evidence with visuals regression discontinuity and differences in differences
+    │   ├── Data_Cleaning_and_Manipulation: Main_Datasets.ipynb - For data cleaning and manipulating the main datasets
+    │   ├── Data_Exploration_and_Feature_Selection: CACPINormalDistributionTest.ipynb - For Canadian data exploration, normality testing, and feature selection on categories
+    │   ├── Data_Exploration_and_Feature_Selection: USCPINormalDistributionTest.ipynb - For US data exploration, normality testing, and feature selection on categories
+    │   ├── visualization_streamlit.py - for visualization of data to garner insights for the user 
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
