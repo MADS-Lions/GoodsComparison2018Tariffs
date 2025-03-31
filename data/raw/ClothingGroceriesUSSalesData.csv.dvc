@@ -1,0 +1,5 @@
+outs:
+- md5: 41b6b5b268426e9345aa96466b85bf5e
+  size: 2769
+  hash: md5
+  path: ClothingGroceriesUSSalesData.csv
