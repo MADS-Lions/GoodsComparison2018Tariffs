@@ -1,0 +1,4 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = /Users/richardwcheng/Library/CloudStorage/GoogleDrive-rwcheng@umich.edu/My /Drive/CapstoneProjectGroup/data

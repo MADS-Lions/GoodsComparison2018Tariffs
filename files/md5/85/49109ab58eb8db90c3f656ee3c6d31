@@ -1,0 +1,231 @@
+Product_Service,Category
+Durable goods,???
+Goods,???
+Household operations,???
+"Household operations, furnishings and equipment",???
+Housing (1986 definition),???
+Non-durable goods,???
+"Paper, plastic and aluminum foil supplies",???
+Products and product groups,???
+Semi-durable goods,???
+Alcoholic beverages,Alcohol & Tobacco
+Alcoholic beverages purchased from stores,Alcohol & Tobacco
+Alcoholic beverages served in licensed establishments,Alcohol & Tobacco
+"Alcoholic beverages, tobacco products and recreational cannabis",Alcohol & Tobacco
+Beer purchased from stores,Alcohol & Tobacco
+Beer served in licensed establishments,Alcohol & Tobacco
+Cigarettes,Alcohol & Tobacco
+Liquor purchased from stores,Alcohol & Tobacco
+Liquor served in licensed establishments,Alcohol & Tobacco
+Tobacco products and smokers' supplies,Alcohol & Tobacco
+Wine purchased from stores,Alcohol & Tobacco
+Wine served in licensed establishments,Alcohol & Tobacco
+Audio equipment,Appliances & Equipment
+Cooking appliances,Appliances & Equipment
+"Home entertainment equipment, parts and services",Appliances & Equipment
+Household appliances,Appliances & Equipment
+Household equipment,Appliances & Equipment
+"Household tools (including lawn, garden and snow removal equipment)",Appliances & Equipment
+Laundry and dishwashing appliances,Appliances & Equipment
+Photographic equipment and supplies,Appliances & Equipment
+Refrigerators and freezers,Appliances & Equipment
+Sporting and exercise equipment,Appliances & Equipment
+Tools and other household equipment,Appliances & Equipment
+"Toys, games (excluding video games) and hobby supplies",Appliances & Equipment
+Video equipment,Appliances & Equipment
+Clothing,Clothing & Footwear Groups
+"Clothing accessories, watches and jewellery",Clothing & Footwear Groups
+Clothing and footwear,Clothing & Footwear Groups
+"Clothing material, notions and services",Clothing & Footwear Groups
+Footwear,Clothing & Footwear Groups
+Athletic footwear,Clothing and footwear
+Children's clothing,Clothing and footwear
+Children's footwear (excluding athletic),Clothing and footwear
+Clothing material and notions,Clothing and footwear
+Dry cleaning services,Clothing and footwear
+Jewellery,Clothing and footwear
+Laundry services,Clothing and footwear
+Leather clothing accessories,Clothing and footwear
+Men's clothing,Clothing and footwear
+Men's footwear (excluding athletic),Clothing and footwear
+Watches,Clothing and footwear
+Women's clothing,Clothing and footwear
+Women's footwear (excluding athletic),Clothing and footwear
+Communications,Communication
+Digital computing equipment and devices,Communication
+Postal and other communications services,Communication
+Telephone services,Communication
+Books and reading material (excluding textbooks),Education & Reading
+Education,Education & Reading
+Education and reading,Education & Reading
+Magazines and periodicals,Education & Reading
+Newspapers,Education & Reading
+Reading material (excluding textbooks),Education & Reading
+"Recreation, education and reading",Education & Reading
+School textbooks and supplies,Education & Reading
+Tuition fees,Education & Reading
+"Fuel, parts and accessories for recreational vehicles",Energy
+Gasoline,Energy
+"Water, fuel and electricity",Energy
+Area rugs and mats,Furniture & Home Decor
+Bedding and other household textiles,Furniture & Home Decor
+Furniture,Furniture & Home Decor
+Furniture and household textiles,Furniture & Home Decor
+Household furnishings and equipment,Furniture & Home Decor
+Services related to household furnishings and equipment,Furniture & Home Decor
+Upholstered furniture,Furniture & Home Decor
+Window coverings,Furniture & Home Decor
+Wooden furniture,Furniture & Home Decor
+"Seeds, plants and cut flowers",Gardening
+Apples,Groceries
+Baby foods,Groceries
+Bakery and cereal products (excluding baby food),Groceries
+Bakery products,Groceries
+Bananas,Groceries
+"Bread, rolls and buns",Groceries
+Breakfast cereal and other cereal products (excluding baby food),Groceries
+Butter,Groceries
+Canned and other preserved fish,Groceries
+Canned vegetables and other vegetable preparations,Groceries
+Cereal products (excluding baby food),Groceries
+Cheese,Groceries
+Coffee,Groceries
+Coffee and tea,Groceries
+"Condiments, spices and vinegars",Groceries
+Confectionery,Groceries
+Cookies and crackers,Groceries
+Dairy products,Groceries
+Dairy products and eggs,Groceries
+Edible fats and oils,Groceries
+Eggs,Groceries
+Fish,Groceries
+"Fish, seafood and other marine products",Groceries
+Flour and flour-based mixes,Groceries
+Food,Groceries
+Food and energy,Groceries
+Food purchased from cafeterias and other restaurants,Groceries
+Food purchased from fast food and take-out restaurants,Groceries
+Food purchased from restaurants,Groceries
+Food purchased from stores,Groceries
+Food purchased from table-service restaurants,Groceries
+Fresh fruit,Groceries
+Fresh fruit and vegetables,Groceries
+Fresh milk,Groceries
+Fresh or frozen beef,Groceries
+Fresh or frozen chicken,Groceries
+Fresh or frozen fish (including portions and fish sticks),Groceries
+Fresh or frozen meat (excluding poultry),Groceries
+Fresh or frozen pork,Groceries
+Fresh or frozen poultry,Groceries
+Fresh vegetables,Groceries
+Frozen and dried vegetables,Groceries
+Frozen food preparations,Groceries
+Fruit juices,Groceries
+"Fruit, fruit preparations and nuts",Groceries
+Goods excluding food purchased from stores,Groceries
+Goods excluding food purchased from stores and energy,Groceries
+Ham and bacon,Groceries
+Ice cream and related products,Groceries
+Lettuce,Groceries
+Margarine,Groceries
+Meat,Groceries
+Non-alcoholic beverages,Groceries
+Non-durable goods excluding food purchased from stores,Groceries
+Non-durable goods excluding food purchased from stores and energy,Groceries
+Nuts and seeds,Groceries
+Oranges,Groceries
+Pasta products,Groceries
+Pet food and supplies,Groceries
+Potatoes,Groceries
+Preserved fruit and fruit preparations,Groceries
+Preserved vegetables and vegetable preparations,Groceries
+Processed meat,Groceries
+Rice and rice-based mixes,Groceries
+Seafood and other marine products,Groceries
+Soup,Groceries
+Sugar and confectionery,Groceries
+Sugar and syrup,Groceries
+Tea,Groceries
+Tomatoes,Groceries
+Vegetables and vegetable preparations,Groceries
+Dental care services,Health & Personal Care
+Eye care goods,Health & Personal Care
+Health and personal care,Health & Personal Care
+Health care,Health & Personal Care
+Health care goods,Health & Personal Care
+Health care services,Health & Personal Care
+Medicinal and pharmaceutical products,Health & Personal Care
+Non-prescribed medicines,Health & Personal Care
+Oral-hygiene products,Health & Personal Care
+Personal care,Health & Personal Care
+Personal care services,Health & Personal Care
+Personal care supplies and equipment,Health & Personal Care
+Personal soap,Health & Personal Care
+Prescribed medicines (excluding medicinal cannabis),Health & Personal Care
+Toiletry items and cosmetics,Health & Personal Care
+Detergents and soaps (other than personal care),Household Supplies
+Household cleaning products,Household Supplies
+Household textiles,Household Supplies
+"Non-electric kitchen utensils, tableware and cookware",Household Supplies
+Paper supplies,Household Supplies
+Plastic and aluminum foil supplies,Household Supplies
+Energy,Housing & Utilities
+Owned accommodation,Housing & Utilities
+Rented accommodation,"Housing, Rent, Tax  & Insurance"
+Services excluding shelter services,"Housing, Rent, Tax  & Insurance"
+Shelter,"Housing, Rent, Tax  & Insurance"
+Shelter (1986 definition),"Housing, Rent, Tax  & Insurance"
+Purchase of digital media,Recreation & Entertainment
+Recreation,Recreation & Entertainment
+Recreational services,Recreation & Entertainment
+Spectator entertainment (excluding video and audio subscription services),Recreation & Entertainment
+Travel services,Recreation & Entertainment
+Travel tours,Recreation & Entertainment
+Traveller accommodation,Recreation & Entertainment
+Use of recreational facilities and services,Recreation & Entertainment
+Video and audio subscription services,Recreation & Entertainment
+Child care and housekeeping services,Services
+Child care services,Services
+Goods and services,Services
+Housekeeping services,Services
+Services,Services
+Electricity,Shelter
+Fuel oil and other fuels,Shelter
+Homeowners' home and mortgage insurance,Shelter
+Homeowners' maintenance and repairs,Shelter
+Homeowners' replacement cost,Shelter
+Mortgage interest cost,Shelter
+Natural gas,Shelter
+Property taxes and other special charges,Shelter
+Rent,Shelter
+Tenants' insurance premiums,Shelter
+"Tenants' maintenance, repairs and other expenses",Shelter
+Water,Shelter
+Air transportation,Transportation
+City bus and subway transportation,Transportation
+Drivers' licences,Transportation
+"Insurance, licences and other services for recreational vehicles",Transportation
+Inter-city transportation,Transportation
+Local and commuter transportation,Transportation
+Operation of passenger vehicles,Transportation
+Operation of recreational vehicles,Transportation
+Parking fees,Transportation
+Passenger vehicle insurance premiums,Transportation
+Passenger vehicle registration fees,Transportation
+Private transportation,Transportation
+Private transportation excluding gasoline,Transportation
+Public transportation,Transportation
+"Rail, highway bus and other inter-city transportation",Transportation
+Rental of passenger vehicles,Transportation
+Taxi and other local and commuter transportation services,Transportation
+Transportation,Transportation
+Leasing of passenger vehicles,Vehicles
+Passenger vehicle maintenance and repair services,Vehicles
+"Passenger vehicle parts, accessories and supplies",Vehicles
+"Passenger vehicle parts, maintenance and repairs",Vehicles
+Purchase and leasing of passenger vehicles,Vehicles
+Purchase and operation of recreational vehicles,Vehicles
+Purchase of passenger vehicles,Vehicles
+Purchase of recreational vehicles and outboard motors,Vehicles
+"Purchase, leasing and rental of passenger vehicles",Vehicles
+Recreational equipment and services (excluding recreational vehicles),Vehicles
