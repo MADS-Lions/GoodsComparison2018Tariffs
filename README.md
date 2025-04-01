@@ -81,7 +81,7 @@ use the Makefile to run the following:
 
 ## Examples
 
-Example of how to use functions 
+Example of how to use regression_discontinuity and differences_in_differences
 
 #Used case shows regression discontinuity model from May 2018 to December 2018 with a fuzzy regression with treatment period from 2018-07-01 to 2018-10-01 and differences in differences for two categories Vehicles and Education & Reading - if there is a second date it will average between the two dates in this case '2017-07-01' to '2017-10-01'
 
@@ -89,7 +89,10 @@ regression_discontinuity_model(df, 'Groceries, '2018-05-01', '2018-12-01', '2018
 
 differences_differences(df, 'Vehicles', 'Education & Reading', '2018-05-01', '2018-12-01', '2018-07-01', date4='2018-10-01', feature='Category', heteroskedasticity='HC3')
 
-Some research narrative for modelling categories with visuals, regression discontinuity, and ARIMA models
+Example of how to use ARIMA model
+arima_model(can_categories_df, category='Shelter', order = (10,1,2), tariff_date='2018-06-01', forecast_steps=8, in_sample_len=8)
+
+Some examples from the research narrative for modelling categories with visuals, regression discontinuity, and ARIMA models
 
 [NarrativeGroceriesClothing&Footwear]('./notebooks/Analysis_Visuals_and_Modes: Groceries_and_Clothing&Footwear.ipynb') <br>
 [ModellingCanadaARIMAForAllCategories]('./notebooks/Modelling: Canada_Arima_Forecasts_9_main_categories.ipynb') <br>
