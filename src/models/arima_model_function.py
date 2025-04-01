@@ -20,7 +20,23 @@ from statsmodels.graphics.tsaplots import plot_pacf, plot_acf
 
 
 def arima_model(df, category, order, tariff_date, forecast_steps, in_sample_len=0):
-    
+    """Arima model for forecasting CPI values
+    args:
+    df: pd.DataFrame, the dataset used for training (must have a datetime index).
+    category: str, the column name for CPI values being modeled.
+    order: tuple, the (p, d, q) order of the ARIMA model.
+    tariff_date: str, the date of the tariff (defaults to '2018-06-01')
+    forecast_steps: int, number of steps to forecast
+    in_sample_len: int, number of steps to forecast in-sample (default is 0)
+
+    returns:
+    pred: pd.Series, predicted values for in-sample
+    test_data: pd.Series, actual test data
+    forecast_df: pd.DataFrame, forecasted values
+    post_tariff_data: pd.DataFrame, actual post-tariff data
+    tariff_date: str, the date of the tariff
+    arima_model: ARIMA model object
+    """
     historical_data = df[df.index <= tariff_date][category].asfreq('MS', method='pad')
 
     arima_model = ARIMA(historical_data, order=order).fit()
