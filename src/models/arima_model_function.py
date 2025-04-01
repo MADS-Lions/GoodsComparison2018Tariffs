@@ -16,7 +16,7 @@ from statsmodels.tsa.ar_model import AutoReg
 from statsmodels.tsa.stattools import adfuller, acf, q_stat
 from statsmodels.stats.diagnostic import het_breuschpagan
 from statsmodels.api import add_constant
-from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.graphics.tsaplots import plot_pacf, plot_acf
 
 
 def arima_model(df, category, order, tariff_date, forecast_steps, in_sample_len=0):
@@ -86,7 +86,7 @@ def arima_model(df, category, order, tariff_date, forecast_steps, in_sample_len=
     post_tariff_data = df[(df.index > tariff_date)][category].asfreq('MS', method='pad')
     post_tariff_data = pd.DataFrame({'Actuals': post_tariff_data[:forecast_steps]}, index=forecast_dates)
     
-    return (pred if in_sample_len > 0 else None), (test_data if in_sample_len > 0 else None), forecast_df, post_tariff_data, tariff_date
+    return (pred if in_sample_len > 0 else None), (test_data if in_sample_len > 0 else None), forecast_df, post_tariff_data, tariff_date, arima_model
 
 
 def plot_arima_results(full_data, category, arima_output):
@@ -104,7 +104,7 @@ def plot_arima_results(full_data, category, arima_output):
     if category not in full_data.columns:
         raise ValueError(f"Category '{category}' not found in DataFrame")
 
-    historical_pred, test_data, forecast_df, post_tariff_data, tariff_date = arima_output
+    historical_pred, test_data, forecast_df, post_tariff_data, tariff_date, _ = arima_output
     # Ensure tariff_date is parsed correctly as a Timestamp
     
     tariff_date = pd.Timestamp(tariff_date)
@@ -189,4 +189,38 @@ def plot_pacf_for_arima(full_data, category, model, lags=20):
     plt.xlabel('Lags')
     plt.ylabel('Partial Autocorrelation')
     plt.grid(True)
+    plt.show()
+
+
+def plot_acf_pcf(full_data, category, tariff_date, lags=20, alpha=.05):
+    """
+    Plots the ACF & PACF
+
+    Parameters:
+    - train_data: pd.DataFrame, the dataset used for training (must have a datetime index).
+    - category: str, the column name for CPI values being modeled.
+    - lags: int, number of lags to display in PACF plot (default is 20).
+    - alpha: float, confidence level to use for testing (default is 0.05)
+    """
+
+    # Ensure the category exists in the dataset
+    if category not in full_data.columns:
+        raise ValueError(f"Category '{category}' not found in training data.")
+
+    train_data = full_data[full_data.index < pd.Timestamp(tariff_date)]
+
+
+    # Extract the target variable
+    data_series = train_data[category].diff().dropna()
+    non_sta_data = train_data[category].dropna()
+
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    plot_acf(data_series, lags=lags, alpha=alpha, ax=axes[0])
+    axes[0].set_title(f"ACF on {category}")
+
+    plot_pacf(data_series, lags=lags, alpha=alpha, method='ywm', ax=axes[1])
+    axes[1].set_title(f"PACF {category}")
+
+    plt.tight_layout()
     plt.show()
