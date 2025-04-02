@@ -1,3 +1,4 @@
+"""ARIMA Model functions for predicting the counterfactual CPI after the tariff date and evaluating the model."""
 import pandas as pd
 import altair as alt
 import matplotlib.pyplot as plt
