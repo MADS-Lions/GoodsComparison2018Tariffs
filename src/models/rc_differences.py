@@ -364,7 +364,7 @@ def differences_differences(df, category1, category2, date1, date2, date3, date4
     return model
 
 #test parallel trends assumption:
-def plot_for_parallel_trends(df, date1, date2, category_tariff, category_non_tariff, category_3 = None):
+def plot_for_parallel_trends(df, date1, date2, category_tariff, category_non_tariff, category_3 = None, x_label = 'Date', y_label = 'CPI Index', title=''):
     """Plot for Parallel Trends
      Accepts Arguments:
       param::df::pandas dataframe: dataframe to be analyzed for parallel trends
@@ -384,9 +384,9 @@ def plot_for_parallel_trends(df, date1, date2, category_tariff, category_non_tar
         df_Canada_CPI_Scaled_US_on_Canada_Tariffs_1 = df_Canada_CPI_Scaled_US_on_Canada_Tariffs[(df_Canada_CPI_Scaled_US_on_Canada_Tariffs['Category']==category_tariff)|(df_Canada_CPI_Scaled_US_on_Canada_Tariffs['Category']==category_non_tariff)|(df_Canada_CPI_Scaled_US_on_Canada_Tariffs['Category']==category_3)]
     df_Canada_CPI_Scaled_US_on_Canada_Tariffs_1['VALUE'] = scale.fit_transform(df_Canada_CPI_Scaled_US_on_Canada_Tariffs_1['VALUE'].values.reshape(-1, 1))
     chart1 = alt.Chart(df_Canada_CPI_Scaled_US_on_Canada_Tariffs_1).mark_line().encode(
-        x='REF_DATE',
-        y='VALUE',
+        x=alt.X('REF_DATE', title = x_label),
+        y=alt.Y('VALUE', title = y_label),
         color = alt.Color('Category', legend = alt.Legend(title = 'Tariff and Non-Tariffed Goods')
-    ))
+    )).properties(title=title)
 
     return chart1
