@@ -1,1 +1,11 @@
+The US datasets including sales, CPI, and manufacturing were taken from the US Bureau of Labor and Statistics and St. Louis Federal Reserve (FRED): 
 
+https://www.bls.gov
+https://www.stlouisfed.org
+
+
+The Canadian datasets including sales, CPI, and manufacturing were taken from the Canadian government website for Statistics Canada:
+
+https://www.statcan.gc.ca/en
+
+Licenses are non-commercial licenses used for open source purposes.

@@ -45,12 +45,14 @@ use the Makefile to run the following:
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │   ├── Analysis_Visuals_and_Models: Groceries_and_Clothing&Footwear.ipynb For Analysis of Groceries and Clothing&Footwear Categories for comparing American and Canadian felt impact from 2018 tariffs. Making a narrative about clothing and groceries and the impact of tariffs on them providing evidence with visuals regression discontinuity and differences in differences
+    │   ├── Analysis_Visuals_and_Models: Groceries_and_Clothing&Footwear.ipynb - For Analysis of Groceries and Clothing&Footwear Categories for comparing American and Canadian felt impact from 2018 tariffs. Making a narrative about clothing and groceries and the impact of tariffs on them providing evidence with visuals regression discontinuity and differences in differences
+    │   ├── Analysis_Visuals_and_Models: Shelter.ipynb - For Analysis of Shelter category for comparing American and Candian felt impact from 2018 tariffs
     │   ├── Data_Cleaning_and_Manipulation: Main_Datasets.ipynb - For data cleaning and manipulating the main datasets
     │   ├── Data_Exploration_and_Feature_Selection: CACPINormalDistributionTest.ipynb - For Canadian data exploration, normality testing, and feature selection on categories
     │   ├── Data_Exploration_and_Feature_Selection: USCPINormalDistributionTest.ipynb - For US data exploration, normality testing, and feature selection on categories
-    │   ├── visualization_streamlit.py - for visualization of data to garner insights for the user 
-    │
+    │   ├── Streamlit: visualization_streamlit.py - for visualization of streamlit of data to garner insights for the user 
+    │   ├── Visualization: Regression_Discontinuity_For_Items_Pre&Post_Tariffs.ipynb - visuals for potential RC diagrams
+    │   ├── Visualization: US_tariff_tradewar_timeline.ipynb - visuals for showing the dates and CPI of the US tradewar in 2018
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
     ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
@@ -70,12 +72,9 @@ use the Makefile to run the following:
     │   │   └── build_features.py
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── rc_difference.py
-    │   │   └── 
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │       │                 predictions
+    │       ├── rc_difference.py - Visualization plots, Regression Discontinuity and Differences in Differences
+    │       └── arima_model_function.py - Functions for PACF, ARIMA model
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
