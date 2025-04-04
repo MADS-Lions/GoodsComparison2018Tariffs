@@ -1,48 +1,21 @@
-"""ARIMA Model functions for predicting the counterfactual CPI after the tariff date and evaluating the model."""
 import pandas as pd
-import altair as alt
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import numpy as np
-import seaborn as sns
-import scipy.stats as stats
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import StandardScaler
-import networkx as nx
 from statsmodels.tsa.arima.model import ARIMA
-from pmdarima import auto_arima
 from sklearn.metrics import mean_absolute_error
-import lightgbm as lgb
-from statsmodels.tsa.ar_model import AutoReg
 from statsmodels.tsa.stattools import adfuller, acf, q_stat
 from statsmodels.stats.diagnostic import het_breuschpagan
 from statsmodels.api import add_constant
-from statsmodels.graphics.tsaplots import plot_pacf, plot_acf
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 
 def arima_model(df, category, order, tariff_date, forecast_steps, in_sample_len=0):
-    """Arima model for forecasting CPI values
-    args:
-    df: pd.DataFrame, the dataset used for training (must have a datetime index).
-    category: str, the column name for CPI values being modeled.
-    order: tuple, the (p, d, q) order of the ARIMA model.
-    tariff_date: str, the date of the tariff (defaults to '2018-06-01')
-    forecast_steps: int, number of steps to forecast
-    in_sample_len: int, number of steps to forecast in-sample (default is 0)
-
-    returns:
-    pred: pd.Series, predicted values for in-sample
-    test_data: pd.Series, actual test data
-    forecast_df: pd.DataFrame, forecasted values
-    post_tariff_data: pd.DataFrame, actual post-tariff data
-    tariff_date: str, the date of the tariff
-    arima_model: ARIMA model object
-    """
+    
     historical_data = df[df.index <= tariff_date][category].asfreq('MS', method='pad')
 
     arima_model = ARIMA(historical_data, order=order).fit()
-
-   
+    
     if in_sample_len != 0:
         pred = arima_model.predict(start=historical_data.index[-in_sample_len], end=historical_data.index[-1])
         test_data = historical_data.iloc[-in_sample_len:]
@@ -85,6 +58,9 @@ def arima_model(df, category, order, tariff_date, forecast_steps, in_sample_len=
         print(f"\n📊 **Model Selection Criteria:**")
         print(f"  AIC: {arima_model.aic:.4f}")
 
+        pred = arima_model.predict(start=historical_data.index[-in_sample_len], end=historical_data.index[-1])
+        test_data = historical_data.iloc[-in_sample_len:]
+
 
     forecast_info = arima_model.get_forecast(steps=forecast_steps)
     future_forecast = forecast_info.predicted_mean
@@ -103,7 +79,7 @@ def arima_model(df, category, order, tariff_date, forecast_steps, in_sample_len=
     post_tariff_data = df[(df.index > tariff_date)][category].asfreq('MS', method='pad')
     post_tariff_data = pd.DataFrame({'Actuals': post_tariff_data[:forecast_steps]}, index=forecast_dates)
     
-    return (pred if in_sample_len > 0 else None), (test_data if in_sample_len > 0 else None), forecast_df, post_tariff_data, tariff_date, arima_model
+    return (pred if in_sample_len > 0 else None), (test_data if in_sample_len > 0 else None), forecast_df, post_tariff_data, tariff_date, arima_model.polynomial_ar
 
 
 def plot_arima_results(full_data, category, arima_output):
@@ -171,44 +147,6 @@ def plot_arima_results(full_data, category, arima_output):
     plt.show()
 
 
-def plot_pacf_for_arima(full_data, category, model, lags=20):
-    """
-    Plots the Partial Autocorrelation Function (PACF) for the training data.
-
-    Parameters:
-    - train_data: pd.DataFrame, the dataset used for training (must have a datetime index).
-    - category: str, the column name for CPI values being modeled.
-    - lags: int, number of lags to display in PACF plot (default is 20).
-    """
-
-    tariff_date = model[4]
-
-    # Ensure the category exists in the dataset
-    if category not in full_data.columns:
-        raise ValueError(f"Category '{category}' not found in training data.")
-
-    train_data = full_data[full_data.index < pd.Timestamp(tariff_date)]
-
-    # Extract the target variable
-    data_series = train_data[category].dropna()
-
-    # First difference the data to make it stationary
-    diff_data_series = data_series.diff().dropna()
-
-    # Ensure the index is a DatetimeIndex
-    if not isinstance(full_data.index, pd.DatetimeIndex):
-        raise TypeError("The index of train_data is not a DatetimeIndex.")
-
-    # Plot PACF
-    plt.figure(figsize=(10, 5))
-    plot_pacf(diff_data_series, lags=lags, method='ywm')
-    plt.title(f'Partial Autocorrelation Function (PACF) for {category}')
-    plt.xlabel('Lags')
-    plt.ylabel('Partial Autocorrelation')
-    plt.grid(True)
-    plt.show()
-
-
 def plot_acf_pcf(full_data, category, tariff_date, lags=20, alpha=.05):
     """
     Plots the ACF & PACF
@@ -241,3 +179,6 @@ def plot_acf_pcf(full_data, category, tariff_date, lags=20, alpha=.05):
 
     plt.tight_layout()
     plt.show()
+
+
+
