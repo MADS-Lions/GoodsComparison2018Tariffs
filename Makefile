@@ -16,7 +16,7 @@ else
 HAS_CONDA=True
 endif
 # Define variables
-NOTEBOOK = ./notebooks/DataCleaningAndManipulation.ipynb
+NOTEBOOK = ./notebooks/Data_Cleaning_and_Manipulation\ -\ Main_Datasets.ipynb
 OUTPUT_NOTEBOOK = output.ipynb
 #################################################################################
 # COMMANDS                                                                      #
