@@ -9,3 +9,5 @@ The Canadian datasets including sales, CPI, and manufacturing were taken from th
 https://www.statcan.gc.ca/en
 
 Licenses are non-commercial licenses used for open source purposes.
+
+Python 3.10.16 was used for the requirements.txt file.
