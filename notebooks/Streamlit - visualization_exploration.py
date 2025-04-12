@@ -270,7 +270,7 @@ def plot_individual_product(df, category, date1, date2):
     )
     return chart
 
-import dvc.api
+import dvc
 
 with dvc.api.open(
     './data/processed/USA_Sales_Processed_Final.csv',
