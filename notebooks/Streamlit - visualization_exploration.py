@@ -12,6 +12,8 @@ from statsmodels.tsa.seasonal import seasonal_decompose, MSTL
 from datetime import date
 
 import streamlit as st
+import os
+os.system("dvc pull")
 
  # Enable Streamlit compatibility in Jupyter
 st.set_page_config(layout="wide")
