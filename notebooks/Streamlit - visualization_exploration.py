@@ -8,7 +8,7 @@ import numpy as np
 import altair as alt
 from scipy.signal import detrend
 from sklearn.linear_model import LogisticRegression
-from statsmodels.tsa.seasonal import seasonal_decompose, MSTL
+from statsmodels.tsa.seasonal import seasonal_decompose, STL, MSTL
 from datetime import date
 
 import streamlit as st
@@ -242,51 +242,21 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         
         df_in_question['RESID'] = season.resid.tolist()
 
-        df_in_question['VALUE_DIF'] = df_in_question['VALUE'].values - df_in_question['VALUE_SEASON'].values
+    
         
         df_in_question['TREND'] = season.trend.tolist()
         df_in_question['VALUE_TREND'] = df_in_question['TREND'].diff()
-        df_in_question['VALUE_DIFF'] = df_in_question['VALUE_DIF'].diff()
-        df_in_question.dropna(subset=['VALUE_DIFF'], inplace=True)
-        df_in_question['VALUE_DETREND'] = detrend(df_in_question['VALUE_DIFF'])
+        
         df_in_question = df_in_question[(df_in_question['REF_DATE']>=date1) & (df_in_question['REF_DATE']<=date2)]
         if point_line =='line':
-            chart = alt.Chart(df_in_question).mark_line().encode(
-                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
-                y=alt.Y('VALUE_DIFF', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
-                color=feature
-            )
-            chart2 = alt.Chart(df_in_question).mark_line().encode(
-                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5, labelFontSize=15, title = x_label)),
-                y=alt.Y('VALUE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
-                color=feature
-            )
-            chart3 = alt.Chart(df_in_question).mark_line().encode(
-                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
-                y=alt.Y('VALUE_DETREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
-                color=feature
-            )
+            
             chart4 = alt.Chart(df_in_question).mark_line().encode(
                 x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
                 y=alt.Y('TREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
                 color=feature
             )
         else:
-            chart = alt.Chart(df_in_question).mark_point().encode(
-                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
-                y=alt.Y('VALUE_DIFF', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
-                color=feature
-            )
-            chart2 = alt.Chart(df_in_question).mark_point().encode(
-                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
-                y=alt.Y('VALUE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
-                color=feature
-            )
-            chart3 = alt.Chart(df_in_question).mark_point().encode(
-                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
-                y=alt.Y('VALUE_DETREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
-                color=feature
-            )
+            
             chart4 = alt.Chart(df_in_question).mark_point().encode(
                 x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
                 y=alt.Y('TREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
