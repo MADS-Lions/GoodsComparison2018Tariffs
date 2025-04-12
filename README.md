@@ -21,8 +21,8 @@ This package is meant to provide analysis and insights into tariffs for categori
 
 
 ## Quickstart
-From the main GOODSCOMPARISON2018TARIFFS folder go to the notebooks folder and run:
-python3 -m streamlit run ./Streamlit\ -\ visualization_exploration.py
+From the main GOODSCOMPARISON2018TARIFFS folder run:
+python3 -m streamlit run ./notebooks/Streamlit\ -\ visualization_exploration.py
 
 use the Makefile to run the following:
 1. make requirements

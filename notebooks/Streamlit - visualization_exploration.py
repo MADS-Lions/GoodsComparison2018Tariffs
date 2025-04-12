@@ -12,8 +12,6 @@ from statsmodels.tsa.seasonal import seasonal_decompose, MSTL
 from datetime import date
 
 import streamlit as st
-import os
-os.system("dvc pull")
 
  # Enable Streamlit compatibility in Jupyter
 st.set_page_config(layout="wide")
@@ -269,66 +267,16 @@ def plot_individual_product(df, category, date1, date2):
         color='Products and product groups'
     )
     return chart
-import subprocess
-
-def install_dvc():
-    try:
-        # Run pip install for DVC
-        subprocess.check_call(["pip", "install", "dvc"])
-        print("DVC installed successfully!")
-    except subprocess.CalledProcessError as e:
-        print(f"Error installing DVC: {e}")
-
-# Call the function to install DVC
-install_dvc()
-
-import dvc
-
-with dvc.api.open(
-    './data/processed/USA_Sales_Processed_Final.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:
-    American_supply_demand = pd.read_csv('../data/processed/USA_Sales_Processed_Final.csv')
-with dvc.api.open(
-    './data/processed/Canada_Sales_Processed_Final.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:    
-    Canadian_supply_demand = pd.read_csv(f)
-with dvc.api.open(
-    './data/processed/USA_CPI_Processed_2018_2019.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:    
-    American_df = pd.read_csv(f)
-with dvc.api.open(
-    './data/processed/Canada_CPI_Processed_2018_2019.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:    
-    Canadian_df = pd.read_csv(f)
-with dvc.api.open(
-    './data/processed/CAN_Categorized_Products_and_Services_NEW.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:    
-    df_model_data_CAN = pd.read_csv(f)
-with dvc.api.open(
-    './data/processed/US_Categorized_Products_and_Services_NEW.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:    
-    df_model_data_USA = pd.read_csv(f)
-
-with dvc.api.open(
-    './data/raw/ClothingGroceriesUSSalesData.csv',
-    repo='https://github.com/MADS-Lions/GoodsComparison2018Tariffs',
-    rev='main'
-) as f:    
-    US_sales_groceries_clothing = pd.read_csv(f)
 
 
+American_supply_demand = pd.read_csv('./data/processed/USA_Sales_Processed_Final.csv')
+Canadian_supply_demand = pd.read_csv('./data/processed/Canada_Sales_Processed_Final.csv')
+American_df = pd.read_csv('./data/processed/USA_CPI_Processed_2018_2019.csv')
+
+
+Canadian_df = pd.read_csv('./data/processed/Canada_CPI_Processed_2018_2019.csv')
+df_model_data_CAN = pd.read_csv('./data/processed/CAN_Categorized_Products_and_Services_NEW.csv')
+df_model_data_USA = pd.read_csv('./data/processed/US_Categorized_Products_and_Services_NEW.csv')
 dict_CAN = df_model_data_CAN.drop_duplicates(subset=['Product_Service']).set_index('Product_Service')['Category'].to_dict()
 dict_USA = df_model_data_USA.drop_duplicates(subset=['Product_Service']).set_index('Product_Service')['Category'].to_dict()
 
@@ -406,7 +354,7 @@ st.altair_chart(chart6, use_container_width=True)
 
 
 
-
+US_sales_groceries_clothing = pd.read_csv("./data/raw/ClothingGroceriesUSSalesData.csv")
 US_sales_groceries_clothing['Clothing Sales'] = US_sales_groceries_clothing['Clothing Sales'].str.replace(',', '')  
 US_sales_groceries_clothing['Grocery Sales'] = US_sales_groceries_clothing['Grocery Sales'].str.replace(',', '')
 US_sales_groceries_clothing['Gas Sales'] = US_sales_groceries_clothing['Gas Sales'].str.replace(',', '')
