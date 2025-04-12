@@ -269,6 +269,18 @@ def plot_individual_product(df, category, date1, date2):
         color='Products and product groups'
     )
     return chart
+import subprocess
+
+def install_dvc():
+    try:
+        # Run pip install for DVC
+        subprocess.check_call(["pip", "install", "dvc"])
+        print("DVC installed successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing DVC: {e}")
+
+# Call the function to install DVC
+install_dvc()
 
 import dvc
 
