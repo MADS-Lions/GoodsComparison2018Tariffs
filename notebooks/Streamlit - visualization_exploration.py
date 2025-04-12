@@ -237,14 +237,14 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         df_value = df_in_question['VALUE']
         df_value.index = pd.to_datetime(df_in_question['REF_DATE'])
         
-        season_model = MSTL(df_value, periods=period).fit()
+        season_model = STL(df_value, period = 7)
+        season = season_model.fit()
         
-        df_in_question['VALUE_SEASON'] = season_model.seasonal[season_model.seasonal.columns[0]].tolist()
-        df_in_question['RESID'] = season_model.resid.tolist()
+        df_in_question['RESID'] = season.resid.tolist()
 
         df_in_question['VALUE_DIF'] = df_in_question['VALUE'].values - df_in_question['VALUE_SEASON'].values
         
-        df_in_question['TREND'] = season_model.trend.tolist()
+        df_in_question['TREND'] = season.trend.tolist()
         df_in_question['VALUE_TREND'] = df_in_question['TREND'].diff()
         df_in_question['VALUE_DIFF'] = df_in_question['VALUE_DIF'].diff()
         df_in_question.dropna(subset=['VALUE_DIFF'], inplace=True)
