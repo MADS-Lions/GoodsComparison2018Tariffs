@@ -161,7 +161,7 @@ def plot_supply_and_demand(sales_df, product, date1 = '2018-05-01', date2 = '201
     return chart1.properties(title=title)
 
 
-def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False):
+def regression_discontinuity_model(df, category, date1, date2, date3, date4 = None, feature = 'Category', goodtype = None, seasonality = None, period = [5, 7], heteroskedasticity = 'HC3', fuzzy_sharp_omit = False, point_line = 'line', x_label = '', y_label = ''):
     """Regression Discontinuity model for the data
     Accepts:
      param::df::pandas dataframe: DataFrame which is the data to be plotted
@@ -181,33 +181,57 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         
      model: statsmodels.regression.linear_model.RegressionResultsWrapper, chart: altair chart, chart2: altair chart, chart3: altair chart
     """
+    print("Product: ", category)
     df_in_question = df.copy()
     if goodtype ==None: 
         df_in_question = df_in_question[df_in_question[feature] == category]
     else:
         df_in_question = df_in_question[(df_in_question[feature] == category) & (df_in_question['GoodType'] == goodtype)]
     df_in_question = df_in_question.sort_values('REF_DATE')
+    df_in_question['REF_DATE'] = pd.to_datetime(df_in_question['REF_DATE'])
+    df_in_question['REF_DATE'] = df_in_question['REF_DATE'].dt.strftime('%Y-%m')
+    df_in_question['y'] = [1.0]*len(df_in_question)
+    df_in_question['text_1'] = ['First Tariff Period']*len(df_in_question)
+    df_in_question['text_2'] = ['Second Tariff Period']*len(df_in_question)
+    
     if seasonality == None:
         df_in_question['VALUE_DIFF'] = df_in_question['VALUE'].diff()
     
         df_in_question.dropna(subset=['VALUE_DIFF'], inplace=True)
         df_in_question['VALUE_DETREND'] = detrend(df_in_question['VALUE_DIFF'])
         df_in_question = df_in_question[(df_in_question['REF_DATE']>=date1) & (df_in_question['REF_DATE']<=date2)]
-        chart = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DIFF',
-            color=feature
-        )
-        chart2 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE',
-            color=feature
-        )
-        chart3 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DETREND',
-            color=feature
-        )
+        if point_line =='line':
+            chart = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DIFF', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title= y_label)),
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DETREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+        else:
+            chart = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DIFF', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DETREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
         
     else:
         df_value = df_in_question['VALUE']
@@ -226,27 +250,48 @@ def regression_discontinuity_model(df, category, date1, date2, date3, date4 = No
         df_in_question.dropna(subset=['VALUE_DIFF'], inplace=True)
         df_in_question['VALUE_DETREND'] = detrend(df_in_question['VALUE_DIFF'])
         df_in_question = df_in_question[(df_in_question['REF_DATE']>=date1) & (df_in_question['REF_DATE']<=date2)]
-        chart = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DIFF',
-            color=feature
-        )
-        chart2 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE',
-            color=feature
-        )
-        chart3 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='VALUE_DETREND',
-            color=feature
-        )
-        chart4 = alt.Chart(df_in_question).mark_line().encode(
-            x='REF_DATE',
-            y='TREND',
-            color=feature
-        )
-        
+        if point_line =='line':
+            chart = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DIFF', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5, labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DETREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart4 = alt.Chart(df_in_question).mark_line().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('TREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+        else:
+            chart = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DIFF', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart2 = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart3 = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('VALUE_DETREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
+            chart4 = alt.Chart(df_in_question).mark_point().encode(
+                x=alt.X('REF_DATE', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = x_label)),
+                y=alt.Y('TREND', axis = alt.Axis(tickCount = 5,labelFontSize=15, title = y_label)),
+                color=feature
+            )
     return chart4
 
 def plot_individual_product(df, category, date1, date2):
